@@ -1,5 +1,5 @@
 {
-  "name": "tauri-app",
+  "name": "huehuehue",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,7 +8,8 @@
     "build:client": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "dev": "tauri dev"
+    "dev": "tauri dev",
+    "build": "tauri build"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.4.0"
