@@ -1,5 +1,5 @@
 {
-  "name": "tauri-app",
+  "name": "huehuehue",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,15 +8,19 @@
     "build:client": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "dev": "tauri dev"
+    "dev": "tauri dev",
+    "build": "tauri build"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1.4.0"
+    "@tauri-apps/api": "^1.4.0",
+    "prettier": "^2.8.8",
+    "prettier-plugin-svelte": "^2.10.1"
   },
   "devDependencies": {
-    "@types/node": "^18.7.10",
     "@sveltejs/vite-plugin-svelte": "^2.0.0",
+    "@tauri-apps/cli": "^1.4.0",
     "@tsconfig/svelte": "^3.0.0",
+    "@types/node": "^18.7.10",
     "svelte": "^3.54.0",
     "svelte-check": "^3.0.0",
     "svelte-preprocess": "^5.0.3",
