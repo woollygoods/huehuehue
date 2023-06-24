@@ -40,21 +40,59 @@ jobs:
       - name: Setup Tarpaulin
         run: cd src-tauri && cargo install cargo-tarpaulin
         continue-on-error: true
-      - name: Run Cargo:fmt
+      - name: Run cargo:fmt
         run: cd src-tauri && cargo fmt --all -- --check
-      - name: Run Cargo:clippy
+      - name: Run cargo:clippy
         run: cd src-tauri && cargo clippy --all-features -- -D warnings
-      - name: Run Cargo:test
+      - name: Run cargo:test
         run: cd src-tauri && cargo test --verbose --all-features
-      - name: Run Cargo:tarpaulin
+      - name: Run cargo:tarpaulin
         run: cd src-tauri && cargo tarpaulin --verbose --all-features --out Xml --output-dir ./coverage
       - name: Codecov
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage/cobertura.xml
 
-  create-release:
+  versioning:
+    permissions:
+      contents: write
     needs: [ verify ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: yarn install
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-edit
+      - name: push & merge back to develop
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "actions@github.com"
+          git fetch --unshallow
+          yarn run release
+          VERSION=$(cat package.json | jq -r '.version')
+          (cd src-tauri && cargo set-version $VERSION)
+          (cd src-tauri && jq ".package.version = \"$VERSION\"" tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json)
+          git commit --amend -am "chore(release): $VERSION"
+          git push --follow-tags origin main
+          git checkout develop 
+          git pull
+          git merge main
+          git push --follow-tags origin develop
+          git checkout main
+
+  create-release:
+    needs: [ verify, versioning ]
     if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
@@ -68,8 +106,30 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: get version
-        run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+      - name: pull latest commit
+        run: git pull
+      - name: get version & changelog
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "PACKAGE_VERSION=$VERSION" >> $GITHUB_ENV
+          echo 'CHANGELOG<<EOF' >> $GITHUB_ENV
+          echo "$(awk -v ver=$VERSION '
+               /^(##|###) \[?[0-9]+.[0-9]+.[0-9]+/ {
+                  if (p) { exit };
+                  if (index($2, "[")) {
+                      split($2, a, "[");
+                      split(a[2], a, "]");
+                      if (a[1] == ver) {
+                          p = 1
+                      }
+                  } else {
+                      if ($2 == ver) {
+                          p = 1
+                      }
+                  }
+              } p
+              ' CHANGELOG.md)" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
       - name: create release
         id: create-release
         uses: actions/github-script@v6
@@ -78,9 +138,9 @@ jobs:
             const { data } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: `app-v${process.env.PACKAGE_VERSION}`,
-              name: `Desktop App v${process.env.PACKAGE_VERSION}`,
-              body: 'Take a look at the assets to download and install this app.',
+              tag_name: `v${process.env.PACKAGE_VERSION}`,
+              name: `huehuehue v${process.env.PACKAGE_VERSION}`,
+              body: `${process.env.CHANGELOG}`,
               draft: true,
               prerelease: false
             })
@@ -110,6 +170,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: pull latest commit
+        run: git pull
       - name: install frontend dependencies
         run: yarn install
       - uses: tauri-apps/tauri-action@v0
