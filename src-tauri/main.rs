@@ -3,15 +3,9 @@
 
 use std::error::Error;
 
-use huehuehue::discover;
+use huehuehue::HueHueHueState;
 use log::info;
-use tauri::RunEvent;
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
+use tauri::{Manager, RunEvent};
 
 #[tokio::main]
 pub async fn main() -> Result<(), Box<dyn Error>> {
@@ -19,10 +13,15 @@ pub async fn main() -> Result<(), Box<dyn Error>> {
         env_logger::Env::default().filter_or(env_logger::DEFAULT_FILTER_ENV, "info"),
     );
     tauri::async_runtime::set(tokio::runtime::Handle::current());
-    tokio::spawn(async move { discover().await });
     info!("starting huehuehue...");
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .manage(HueHueHueState(Default::default()))
+        .setup(|app| {
+            let state = app.state::<HueHueHueState>();
+            state.0.lock().unwrap().discover().unwrap();
+
+            Ok(())
+        })
         .build(tauri::generate_context!())
         .expect("error building tauri app")
         .run(|_, event| match event {
