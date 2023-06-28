@@ -1,19 +1,18 @@
+#[macro_use]
+pub mod macros;
+pub mod endpoints;
 pub mod transfer;
 
 use futures_util::{pin_mut, stream::StreamExt};
 use log::info;
 use mdns::RecordKind;
 use reachable::*;
-use std::{
-    collections::HashSet,
-    error::Error,
-    fmt::Display,
-    net::IpAddr,
-    sync::{Arc, Mutex},
-    time::Duration,
-};
+use reqwest::Client;
+use std::{collections::HashSet, net::IpAddr, sync::Arc, time::Duration};
+use tokio::sync::Mutex;
 
 const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
+const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
 
 #[derive(Debug, Default)]
 pub struct HueHueHueConfig {}
@@ -22,29 +21,35 @@ pub struct HueHueHueConfig {}
 pub struct HueHueHue {
     _config: HueHueHueConfig,
     bridge_ip_addrs: Arc<Mutex<HashSet<IpAddr>>>,
+    client: Client,
 }
 
 pub struct HueHueHueState(pub Mutex<HueHueHue>);
 
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
 pub enum HueHueHueError {
-    SynchronizationError,
+    #[error(transparent)]
+    MdnsError(#[from] mdns::Error),
+    #[error(transparent)]
+    ReqwestError(#[from] reqwest::Error),
 }
 
-impl Display for HueHueHueError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        #[allow(clippy::match_single_binding)]
-        let desc = match self {
-            HueHueHueError::SynchronizationError => "synchronization error",
-        };
-        write!(f, "{}", desc)
+impl serde::Serialize for HueHueHueError {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        serializer.serialize_str(self.to_string().as_ref())
     }
 }
 
-impl Error for HueHueHueError {}
-
 impl HueHueHue {
-    pub fn discover(&self) -> Result<(), Box<dyn Error + Send + Sync>> {
+    fn get_base_url(&self) -> String {
+        // TODO: compute the actual base url using the currently selected bridge device
+        HUE_BRIDGE_API_BASE_URL.to_string()
+    }
+
+    pub fn discover(&self) -> Result<(), HueHueHueError> {
         let addrs = self.bridge_ip_addrs.clone();
         tokio::spawn(async move {
             info!(
@@ -66,15 +71,13 @@ impl HueHueHue {
                         "mDNS response to service name query \"{}\" received from \"{}\"",
                         HUE_BRIDGE_SERVICE_NAME, &addr
                     );
-                    let mut addrs = addrs
-                        .lock()
-                        .map_err(|_| HueHueHueError::SynchronizationError)?;
+                    let mut addrs = addrs.lock().await;
                     addrs.retain(|e| Into::<IcmpTarget>::into(*e).check_availability().is_ok());
                     addrs.insert(addr);
                 }
             }
 
-            Ok::<(), Box<dyn Error + Send + Sync>>(())
+            Ok::<(), HueHueHueError>(())
         });
 
         Ok(())
