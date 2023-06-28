@@ -1,3 +1,5 @@
+pub mod transfer;
+
 use futures_util::{pin_mut, stream::StreamExt};
 use log::info;
 use mdns::RecordKind;
