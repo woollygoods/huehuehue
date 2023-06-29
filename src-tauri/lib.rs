@@ -12,6 +12,7 @@ use std::{collections::HashSet, net::IpAddr, sync::Arc, time::Duration};
 use tokio::sync::Mutex;
 
 const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
+const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 3600;
 const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
 
 #[derive(Debug, Default)]
@@ -56,8 +57,11 @@ impl HueHueHue {
                 "initiating hue bridge discovery mDNS query service for address \"{}\"...",
                 HUE_BRIDGE_SERVICE_NAME
             );
-            let stream =
-                mdns::discover::all(HUE_BRIDGE_SERVICE_NAME, Duration::from_secs(15))?.listen();
+            let stream = mdns::discover::all(
+                HUE_BRIDGE_SERVICE_NAME,
+                Duration::from_secs(HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS),
+            )?
+            .listen();
             pin_mut!(stream);
 
             while let Some(Ok(resp)) = stream.next().await {
