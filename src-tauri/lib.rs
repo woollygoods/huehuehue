@@ -1,7 +1,4 @@
-#[macro_use]
-pub mod macros;
-pub mod endpoints;
-pub mod transfer;
+pub mod core;
 
 use futures_util::{pin_mut, stream::StreamExt};
 use log::info;
