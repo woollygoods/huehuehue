@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: 'Inter';
-    src: url('/public/Inter.ttf');
+    src: url('/Inter.ttf');
     font-feature-settings: 'tnum';
     font-weight: 100 900;
 }

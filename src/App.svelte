@@ -1,6 +1,19 @@
 <script lang="ts">
+    import { Route, Router } from 'svelte-routing';
+    import Dashboard from './pages/Dashboard.svelte';
+    import Discovery from './pages/Discovery.svelte';
+
+    /**
+     * To actually decide if the discovery is needed, get the state from the
+     * rust backend.
+     */
+    let needsDiscovery = true;
+    let originalURL = needsDiscovery ? '/discovery' : '/';
 </script>
 
-<div class="h-screen w-screen bg-ink-500">
-    <h1 class="text-4xl bg-nebula-400 text-snow-500">hello world!</h1>
+<div class="h-screen w-screen bg-ink-400 p-6">
+    <Router url={originalURL}>
+        <Route path="/" component={Dashboard} />
+        <Route path="/discovery" component={Discovery} />
+    </Router>
 </div>
