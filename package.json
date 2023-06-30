@@ -13,10 +13,13 @@
         "release": "standard-version"
     },
     "dependencies": {
+        "@fortawesome/free-brands-svg-icons": "^6.4.0",
+        "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@tauri-apps/api": "^1.4.0",
         "class-variance-authority": "^0.6.1",
         "prettier": "^2.8.8",
         "prettier-plugin-svelte": "^2.10.1",
+        "svelte-fa": "^3.0.4",
         "tailwind-merge": "^1.13.2"
     },
     "devDependencies": {

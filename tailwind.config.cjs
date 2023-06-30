@@ -6,8 +6,8 @@ const config = {
         colors: {
             ink: {
                 400: '#16141D',
-                500: '#1D1A23',
-                600: '#2F2D34',
+                500: '#211C29',
+                600: '#302D3A',
             },
             nebula: {
                 400: '#542DC1',
@@ -18,7 +18,9 @@ const config = {
                 500: '#FF63F7',
             },
             snow: {
+                400: '#D2DFE3',
                 500: '#F0FBFF',
+                600: '#FCFEFF',
             },
         },
         extend: {},
