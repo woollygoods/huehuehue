@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use huehuehue::bindings;
 use huehuehue::core::endpoints::*;
 use huehuehue::huehuehue_handlers;
 use huehuehue::HueHueHue;
@@ -9,7 +10,6 @@ use huehuehue::HueHueHueState;
 use log::info;
 use tauri::RunEvent;
 use tokio::sync::Mutex;
-use huehuehue::bindings;
 
 #[tokio::main]
 pub async fn main() -> Result<(), HueHueHueError> {
