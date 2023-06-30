@@ -88,7 +88,6 @@ macro_rules! handlers {
         #[macro_export]
         macro_rules! bindings {
             ($path:expr) => {
-                #[cfg(debug_assertions)]
                 tauri_specta::ts::export(specta::collect_types![$($handler,)*], $path).unwrap();
             };
         }

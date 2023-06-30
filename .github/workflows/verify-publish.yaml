@@ -32,20 +32,22 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: generate typescript bindings
+        run: cd src-tauri && cargo run --release -- --generate-bindings-only
       - name: install frontend dependencies
         run: yarn install
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup Tarpaulin
-        run: cd src-tauri && cargo install cargo-tarpaulin
-        continue-on-error: true
+      - name: Run cargo:test
+        run: cd src-tauri && cargo test --verbose --all-features
       - name: Run cargo:fmt
         run: cd src-tauri && cargo fmt --all -- --check
       - name: Run cargo:clippy
         run: cd src-tauri && cargo clippy --all-features -- -D warnings
-      - name: Run cargo:test
-        run: cd src-tauri && cargo test --verbose --all-features
+      - name: Setup Tarpaulin
+        run: cd src-tauri && cargo install cargo-tarpaulin
+        continue-on-error: true
       - name: Run cargo:tarpaulin
         run: cd src-tauri && cargo tarpaulin --verbose --all-features --out Xml --output-dir ./coverage
       - name: Codecov
@@ -172,6 +174,8 @@ jobs:
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
       - name: pull latest commit
         run: git pull
+      - name: generate typescript bindings
+        run: cd src-tauri && cargo run --release -- --generate-bindings-only
       - name: install frontend dependencies
         run: yarn install
       - uses: tauri-apps/tauri-action@v0

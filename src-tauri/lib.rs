@@ -1,5 +1,6 @@
 pub mod core;
 
+use clap::Parser;
 use futures_util::{pin_mut, stream::StreamExt};
 use log::info;
 use mdns::RecordKind;
@@ -12,12 +13,22 @@ const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
 const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 3600;
 const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
 
-#[derive(Debug, Default)]
-pub struct HueHueHueConfig {}
+#[derive(Clone, Debug, Parser)]
+#[command(author, version, about)]
+pub struct HueHueHueConfig {
+    #[arg(long)]
+    pub generate_bindings_only: bool,
+}
+
+impl Default for HueHueHueConfig {
+    fn default() -> Self {
+        HueHueHueConfig::parse()
+    }
+}
 
 #[derive(Debug, Default)]
 pub struct HueHueHue {
-    _config: HueHueHueConfig,
+    config: HueHueHueConfig,
     bridge_ip_addrs: Arc<Mutex<HashSet<IpAddr>>>,
     client: Client,
 }
@@ -42,6 +53,10 @@ impl serde::Serialize for HueHueHueError {
 }
 
 impl HueHueHue {
+    pub fn get_config(&self) -> HueHueHueConfig {
+        self.config.clone()
+    }
+
     fn get_base_url(&self) -> String {
         // TODO: compute the actual base url using the currently selected bridge device
         HUE_BRIDGE_API_BASE_URL.to_string()
