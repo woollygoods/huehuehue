@@ -3,15 +3,16 @@
 use core::fmt::Debug;
 use paste::paste;
 use serde::{Deserialize, Serialize};
+use specta::Type;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Error {
     description: String,
 }
 
 pub trait HueV2Res: Debug {}
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2ResourceApi<F: HueV2Res> {
     errors: Vec<HueV2Error>,
     data: Vec<F>,
@@ -27,7 +28,7 @@ macro_rules! hue_v2_res {
     };
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2ResourceType {
     Device,
@@ -63,7 +64,7 @@ pub enum HueV2ResourceType {
     SmartScene,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Resource {
     id: String,
     r#type: HueV2ResourceType,
@@ -71,7 +72,7 @@ pub struct HueV2Resource {
 }
 hue_v2_res!(HueV2Resource);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2ProductArchetype {
     BridgeV2,
@@ -126,7 +127,7 @@ pub enum HueV2ProductArchetype {
     CeilingTube,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2DeviceProductData {
     model_id: String,
     manufacturer_name: String,
@@ -137,19 +138,19 @@ pub struct HueV2DeviceProductData {
     hardware_platform_type: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2DeviceMetadata {
     name: String,
     archetype: HueV2ProductArchetype,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2ResourceIdentifier {
     rid: String,
     rtype: HueV2ResourceType,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Device {
     id: String,
     r#type: HueV2ResourceType,
@@ -160,7 +161,7 @@ pub struct HueV2Device {
 }
 hue_v2_res!(HueV2Device);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2BridgeHome {
     id: String,
     r#type: HueV2ResourceType,
@@ -170,7 +171,7 @@ pub struct HueV2BridgeHome {
 }
 hue_v2_res!(HueV2BridgeHome);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub enum HueV2RoomArchetype {
     LivingRoom,
     Kitchen,
@@ -214,13 +215,13 @@ pub enum HueV2RoomArchetype {
     Other,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2RoomMetadata {
     name: String,
     archetype: HueV2RoomArchetype,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Room {
     id: String,
     r#type: HueV2ResourceType,
@@ -231,7 +232,7 @@ pub struct HueV2Room {
 }
 hue_v2_res!(HueV2Room);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Zone {
     id: String,
     r#type: HueV2ResourceType,
@@ -242,7 +243,7 @@ pub struct HueV2Zone {
 }
 hue_v2_res!(HueV2Zone);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub enum HueV2LightArchetype {
     UnknownArchetype,
     ClassicBulb,
@@ -294,57 +295,57 @@ pub enum HueV2LightArchetype {
     CeilingHorizontal,
     CeilingTube,
 }
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightMetadata {
     name: String,
     archetype: HueV2LightArchetype,
     fixed_mired: Option<u32>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightOn {
     on: bool,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightDimming {
     brightness: f64,
     min_dim_level: Option<f64>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightColorTemperatureMirekSchema {
     mirek_minimum: u32,
     mirek_maximum: u32,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightColorTemperature {
     mirek: u32,
     mirek_valid: bool,
     mirek_schema: HueV2LightColorTemperatureMirekSchema,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightColorXY {
     x: f64,
     y: f64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightColorGamutChannel {
     x: f64,
     y: f64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightColorGamut {
     red: HueV2LightColorGamutChannel,
     green: HueV2LightColorGamutChannel,
     blue: HueV2LightColorGamutChannel,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightColorGamutType {
     A,
@@ -353,21 +354,21 @@ pub enum HueV2LightColorGamutType {
     Other,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightColor {
     xy: HueV2LightColorXY,
     gamut: Option<HueV2LightColorGamut>,
     gamut_type: HueV2LightColorGamutType,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightDynamicsStatus {
     DynamicPalette,
     None,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightDynamics {
     status: HueV2LightDynamicsStatus,
     status_values: Vec<String>,
@@ -375,47 +376,47 @@ pub struct HueV2LightDynamics {
     speed_valid: bool,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightAlert {
     action_values: Vec<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightSignal {
     NoSignal,
     OnOff,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightSignalingStatus {
     signal: HueV2LightSignal,
     estimated_end: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightSignaling {
     status: Option<HueV2LightSignalingStatus>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightMode {
     Normal,
     Streaming,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightGradientColor {
     xy: HueV2LightColorXY,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightGradientPoint {
     color: HueV2LightGradientColor,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightGradientMode {
     InterpolatedPalette,
@@ -423,7 +424,7 @@ pub enum HueV2LightGradientMode {
     RandomPixelated,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightGradient {
     points: Vec<HueV2LightGradientPoint>,
     mode: HueV2LightGradientMode,
@@ -432,7 +433,7 @@ pub struct HueV2LightGradient {
     pixel_count: Option<u32>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightEffect {
     Sparkle,
@@ -441,7 +442,7 @@ pub enum HueV2LightEffect {
     NoEffect,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightEffects {
     effect: HueV2LightEffect,
     status_values: Vec<String>,
@@ -449,14 +450,14 @@ pub struct HueV2LightEffects {
     effect_values: Vec<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightTimedEffect {
     Sunrise,
     NoEffect,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightTimedEffects {
     effect: HueV2LightTimedEffect,
     duration: Option<u32>,
@@ -465,7 +466,7 @@ pub struct HueV2LightTimedEffects {
     effect_values: Vec<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightPowerupPreset {
     Safety,
@@ -474,7 +475,7 @@ pub enum HueV2LightPowerupPreset {
     Custom,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightPowerupOnMode {
     On,
@@ -482,31 +483,31 @@ pub enum HueV2LightPowerupOnMode {
     Previous,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightPowerupOn {
     mode: HueV2LightPowerupOnMode,
     on: Option<HueV2LightOn>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightPowerupDimmingMode {
     Dimming,
     Previous,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightPowerupDimmingBrightness {
     brightness: f64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightPowerupDimming {
     mode: HueV2LightPowerupDimmingMode,
     dimming: Option<HueV2LightPowerupDimmingBrightness>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2LightColorTemperatureMode {
     ColorTemperature,
@@ -514,24 +515,24 @@ pub enum HueV2LightColorTemperatureMode {
     Previous,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightPowerupColorTemperature {
     mirek: u32,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightPowerupColorColor {
     xy: HueV2LightColorXY,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightPowerupColor {
     mode: HueV2LightColorTemperatureMode,
     color_temperature: Option<HueV2LightPowerupColorTemperature>,
     color: Option<HueV2LightPowerupColorColor>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightPowerup {
     preset: HueV2LightPowerupPreset,
     configured: bool,
@@ -540,7 +541,7 @@ pub struct HueV2LightPowerup {
     color: Option<HueV2LightPowerupColor>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Light {
     id: String,
     r#type: HueV2ResourceType,
@@ -562,12 +563,12 @@ pub struct HueV2Light {
 }
 hue_v2_res!(HueV2Light);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2ButtonMetadata {
     control_id: u32,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2ButtonEvent {
     InitialPress,
@@ -578,12 +579,12 @@ pub enum HueV2ButtonEvent {
     LongPress,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2ButtonButton {
     last_event: HueV2ButtonEvent,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Button {
     id: String,
     r#type: HueV2ResourceType,
@@ -594,39 +595,39 @@ pub struct HueV2Button {
 }
 hue_v2_res!(HueV2Button);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2RelativeRotaryAction {
     Start,
     Repeat,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum HueV2RelativeRotaryDirection {
     ClockWise,
     CounterClockWise,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2RelativeRotaryRotation {
     direction: HueV2RelativeRotaryDirection,
     steps: u32,
     duration: u32,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2RelativeRotaryEvent {
     action: HueV2RelativeRotaryAction,
     rotation: HueV2RelativeRotaryRotation,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2RelativeRotaryInner {
     last_event: Option<HueV2RelativeRotaryEvent>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2RelativeRotary {
     id: String,
     r#type: HueV2ResourceType,
@@ -636,13 +637,13 @@ pub struct HueV2RelativeRotary {
 }
 hue_v2_res!(HueV2RelativeRotary);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2TemperatureInner {
     temperature: f64,
     temperature_valid: bool,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Temperature {
     id: String,
     r#type: HueV2ResourceType,
@@ -653,13 +654,13 @@ pub struct HueV2Temperature {
 }
 hue_v2_res!(HueV2Temperature);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightLevelInner {
     light_level: u32,
     light_level_valid: bool,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2LightLevel {
     id: String,
     r#type: HueV2ResourceType,
@@ -670,13 +671,13 @@ pub struct HueV2LightLevel {
 }
 hue_v2_res!(HueV2LightLevel);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2MotionInner {
     motion: bool,
     motion_valid: bool,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Motion {
     id: String,
     r#type: HueV2ResourceType,
@@ -687,20 +688,20 @@ pub struct HueV2Motion {
 }
 hue_v2_res!(HueV2Motion);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2EntertainmentSegment {
     start: u32,
     length: u32,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2EntertainmentSegments {
     configurable: bool,
     max_segments: u32,
     segments: Vec<HueV2EntertainmentSegment>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Entertainment {
     id: String,
     r#type: HueV2ResourceType,
@@ -714,22 +715,22 @@ pub struct HueV2Entertainment {
 }
 hue_v2_res!(HueV2Entertainment);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2GroupedLightOn {
     on: bool,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2GroupedLightDimming {
     dimming: f64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2GroupedLightAlert {
     action_values: Vec<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2GroupedLight {
     id: String,
     r#type: HueV2ResourceType,
@@ -741,20 +742,20 @@ pub struct HueV2GroupedLight {
 }
 hue_v2_res!(HueV2GroupedLight);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub enum HueV2DeviceBatteryState {
     Normal,
     Low,
     Critical,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2DevicePowerState {
     battery_state: Option<HueV2DeviceBatteryState>,
     battery_level: Option<u32>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2DevicePower {
     id: String,
     r#type: HueV2ResourceType,
@@ -764,74 +765,74 @@ pub struct HueV2DevicePower {
 }
 hue_v2_res!(HueV2DevicePower);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2ZigbeeBridgeConnectivity {}
 hue_v2_res!(HueV2ZigbeeBridgeConnectivity);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2ZigbeeConnectivity {}
 hue_v2_res!(HueV2ZigbeeConnectivity);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2ZgpConnectivity {}
 hue_v2_res!(HueV2ZgpConnectivity);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Bridge {}
 hue_v2_res!(HueV2Bridge);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2ZigbeeDeviceDiscovery {}
 hue_v2_res!(HueV2ZigbeeDeviceDiscovery);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Homekit {}
 hue_v2_res!(HueV2Homekit);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Matter {}
 hue_v2_res!(HueV2Matter);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2MatterFabric {}
 hue_v2_res!(HueV2MatterFabric);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Scene {}
 hue_v2_res!(HueV2Scene);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2EntertainmentConfiguration {}
 hue_v2_res!(HueV2EntertainmentConfiguration);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2PublicImage {}
 hue_v2_res!(HueV2PublicImage);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2AuthV1 {}
 hue_v2_res!(HueV2AuthV1);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2BehaviorScript {}
 hue_v2_res!(HueV2BehaviorScript);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2BehaviorInstance {}
 hue_v2_res!(HueV2BehaviorInstance);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Geofence {}
 hue_v2_res!(HueV2Geofence);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2GeofenceClient {}
 hue_v2_res!(HueV2GeofenceClient);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2Geolocation {}
 hue_v2_res!(HueV2Geolocation);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Type)]
 pub struct HueV2SmartScene {}
 hue_v2_res!(HueV2SmartScene);

@@ -20,6 +20,7 @@ macro_rules! endpoint {
             }
 
             #[tauri::command]
+            #[specta::specta]
             pub async fn [<$method:lower _ $endpointname>]($(body: $body, )? $($($param: String),+,)? state: tauri::State<'_, crate::HueHueHueState>) -> Result<$returntype, crate::HueHueHueError> {
                 let huehuehue = state.0.lock().await;
                 crate::HueHueHue::[<$method:lower _ $endpointname>](&huehuehue $(,body as $body)? $(,$($param)+)?).await
@@ -85,6 +86,12 @@ macro_rules! patch {
 macro_rules! handlers {
     ($($handler:ident),*) => {
         #[macro_export]
+        macro_rules! bindings {
+            ($path:expr) => {
+                tauri_specta::ts::export(specta::collect_types![$($handler,)*], $path).unwrap();
+            };
+        }
+        #[macro_export]
         macro_rules! huehuehue_handlers {
             ($app:expr) => {
                 $app.invoke_handler(tauri::generate_handler![$($handler,)*])
@@ -92,3 +99,4 @@ macro_rules! handlers {
         }
     };
 }
+
