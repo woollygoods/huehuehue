@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use huehuehue::bindings;
 use huehuehue::core::endpoints::*;
 use huehuehue::huehuehue_handlers;
 use huehuehue::HueHueHue;
@@ -19,6 +20,7 @@ pub async fn main() -> Result<(), HueHueHueError> {
     info!("starting huehuehue...");
     let huehuehue: HueHueHue = HueHueHue::default();
     huehuehue.discover()?;
+    bindings!("../src/bindings.ts");
     huehuehue_handlers!(tauri::Builder::default())
         .manage(HueHueHueState(Mutex::new(huehuehue)))
         .build(tauri::generate_context!())
