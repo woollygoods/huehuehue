@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cva, type VariantProps } from 'class-variance-authority';
 
-    let styling = cva('', {
+    let styling = cva('select-none', {
         variants: {
             variant: {
                 light: 'text-snow-500',
