@@ -1,5 +1,5 @@
 #[allow(unused_imports)]
-use crate::transfer::*;
+use crate::core::transfer::*;
 
 get!("/resource", resources, HueV2ResourceResponse);
 get!("/resource/{id}", resource, HueV2ResourceResponse, [id]);
