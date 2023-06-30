@@ -1,5 +1,10 @@
+use std::{collections::HashMap, net::IpAddr};
+
+use tauri::State;
+
 #[allow(unused_imports)]
 use crate::core::transfer::*;
+use crate::{HueHueHueError, HueHueHueState};
 
 get!("/resource", resources, HueV2ResourceResponse);
 get!("/resource/{id}", resource, HueV2ResourceResponse, [id]);
@@ -106,6 +111,28 @@ get!(
     [id]
 );
 
+#[tauri::command]
+#[specta::specta]
+pub async fn set_selected_bridge(
+    mdns_name: String,
+    state: State<'_, HueHueHueState>,
+) -> Result<(), HueHueHueError> {
+    let mut huehuehue = state.0.lock().await;
+    huehuehue.set_selected_bridge(mdns_name);
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_discovered_bridges(
+    state: State<'_, HueHueHueState>,
+) -> Result<HashMap<String, IpAddr>, HueHueHueError> {
+    let huehuehue = state.0.lock().await;
+
+    Ok(huehuehue.get_discovered_bridges().await)
+}
+
 handlers!(
     get_resources,
     get_resource,
@@ -136,5 +163,7 @@ handlers!(
     get_temperatures,
     get_temperature,
     get_light_levels,
-    get_light_level
+    get_light_level,
+    set_selected_bridge,
+    get_discovered_bridges
 );

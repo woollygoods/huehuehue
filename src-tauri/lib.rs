@@ -6,11 +6,11 @@ use log::info;
 use mdns::RecordKind;
 use reachable::*;
 use reqwest::Client;
-use std::{collections::HashSet, net::IpAddr, sync::Arc, time::Duration};
+use std::{collections::HashMap, net::IpAddr, sync::Arc, time::Duration};
 use tokio::sync::Mutex;
 
 const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
-const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 3600;
+const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 1;
 const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
 
 #[derive(Debug, Default)]
@@ -19,7 +19,8 @@ pub struct HueHueHueBackendConfig {}
 #[derive(Debug, Default)]
 pub struct HueHueHue {
     _config: HueHueHueBackendConfig,
-    bridge_ip_addrs: Arc<Mutex<HashSet<IpAddr>>>,
+    bridges: Arc<Mutex<HashMap<String, IpAddr>>>,
+    selected_bridge: String,
     client: Client,
 }
 
@@ -50,13 +51,21 @@ impl HueHueHue {
         }
     }
 
+    pub fn set_selected_bridge(&mut self, mdns_name: String) {
+        self.selected_bridge = mdns_name;
+    }
+
+    pub async fn get_discovered_bridges(&self) -> HashMap<String, IpAddr> {
+        self.bridges.lock().await.clone()
+    }
+
     fn get_base_url(&self) -> String {
         // TODO: compute the actual base url using the currently selected bridge device
         HUE_BRIDGE_API_BASE_URL.to_string()
     }
 
     pub fn discover(&self) -> Result<(), HueHueHueError> {
-        let addrs = self.bridge_ip_addrs.clone();
+        let addrs = self.bridges.clone();
         tokio::spawn(async move {
             info!(
                 "initiating hue bridge discovery mDNS query service for address \"{}\"...",
@@ -70,19 +79,21 @@ impl HueHueHue {
             pin_mut!(stream);
 
             while let Some(Ok(resp)) = stream.next().await {
-                let addr: Option<IpAddr> = resp.records().find_map(|r| match r.kind {
-                    RecordKind::A(addr) => Some(addr.into()),
-                    RecordKind::AAAA(addr) => Some(addr.into()),
+                let addr: Option<(String, IpAddr)> = resp.records().find_map(|r| match r.kind {
+                    RecordKind::A(addr) => Some((r.name.clone(), addr.into())),
+                    RecordKind::AAAA(addr) => Some((r.name.clone(), addr.into())),
                     _ => None,
                 });
                 if let Some(addr) = addr {
                     info!(
-                        "mDNS response to service name query \"{}\" received from \"{}\"",
-                        HUE_BRIDGE_SERVICE_NAME, &addr
+                        "mDNS response to service name query \"{}\" received from \"{}\" (\"{}\")",
+                        HUE_BRIDGE_SERVICE_NAME, &addr.0, &addr.1
                     );
                     let mut addrs = addrs.lock().await;
-                    addrs.retain(|e| Into::<IcmpTarget>::into(*e).check_availability().is_ok());
-                    addrs.insert(addr);
+                    addrs.retain(|_, &mut e| {
+                        Into::<IcmpTarget>::into(e).check_availability().is_ok()
+                    });
+                    addrs.insert(addr.0, addr.1);
                 }
             }
 
