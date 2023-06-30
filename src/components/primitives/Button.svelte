@@ -16,6 +16,10 @@
                 lg: 'rounded-lg',
                 md: 'rounded-md',
             },
+            size: {
+                lg: 'text-base',
+                md: 'text-sm tracking-wide',
+            },
             fullWidth: {
                 true: 'w-full grow',
             },
@@ -26,6 +30,7 @@
         defaultVariants: {
             variant: 'dark',
             rounding: 'lg',
+            size: 'lg',
         },
     });
 
@@ -36,10 +41,11 @@
     export let fullWidth: boolean = false;
     export let variant: VariantProps<typeof styling>['variant'] = 'dark';
     export let rounding: VariantProps<typeof styling>['rounding'] = 'lg';
+    export let size: VariantProps<typeof styling>['size'] = 'lg';
 </script>
 
 <button
-    class={styling({ variant, rounding, fullWidth, disabled })}
+    class={styling({ variant, rounding, fullWidth, disabled, size })}
     on:click={onClick}
     {disabled}
 >
