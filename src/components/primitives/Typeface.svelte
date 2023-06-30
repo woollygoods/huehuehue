@@ -24,8 +24,9 @@
 
     export let variant: VariantProps<typeof styling>['variant'] = 'light';
     export let size: VariantProps<typeof styling>['size'] = 'md';
+    export let className: string = '';
 </script>
 
-<p {...$$props} class={styling({ variant, size, class: $$props.class })}>
+<p {...$$props} class={styling({ variant, size, class: className })}>
     <slot />
 </p>
