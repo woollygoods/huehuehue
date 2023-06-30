@@ -1,4 +1,14 @@
 <script lang="ts">
+    import type { HueV2Room } from './bindings';
+    let room: HueV2Room = {
+        id: "1",
+        type: 'room',
+        id_v1: null,
+        children: [],
+        services: [],
+        metadata: { name: 'test', archetype: 'LivingRoom' },
+    };
+    console.log(room);
 </script>
 
 <div class="h-screen w-screen bg-ink-500">

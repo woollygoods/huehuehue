@@ -20,7 +20,7 @@ pub async fn main() -> Result<(), HueHueHueError> {
     info!("starting huehuehue...");
     let huehuehue: HueHueHue = HueHueHue::default();
     huehuehue.discover()?;
-    bindings!("../../src/bindings.ts");
+    bindings!("../src/bindings.ts");
     huehuehue_handlers!(tauri::Builder::default())
         .manage(HueHueHueState(Mutex::new(huehuehue)))
         .build(tauri::generate_context!())
