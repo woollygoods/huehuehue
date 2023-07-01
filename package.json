@@ -8,8 +8,10 @@
         "build:client": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "dev": "tauri dev",
-        "build": "tauri build",
+        "bindings:debug": "cd src-tauri && cargo run -- --generate-bindings-only",
+        "bindings:release": "cd src-tauri && cargo run --release -- --generate-bindings-only",
+        "dev": "yarn run bindings:debug && tauri dev",
+        "build": "yarn run bindings:release && tauri build",
         "release": "standard-version"
     },
     "dependencies": {
