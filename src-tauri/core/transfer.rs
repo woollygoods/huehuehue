@@ -10,10 +10,10 @@ pub struct HueV2Error {
     description: String,
 }
 
-pub trait HueV2Res: Debug {}
+pub trait HueV2Res: Debug + Type {}
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2ResourceApi<F: HueV2Res> {
+pub struct HueV2Response<F: HueV2Res> {
     errors: Vec<HueV2Error>,
     data: Vec<F>,
 }
@@ -23,7 +23,7 @@ macro_rules! hue_v2_res {
         paste::paste! {
             impl HueV2Res for $v {}
 
-            pub type [<$v Response>] = HueV2ResourceApi<$v>;
+            pub type [<$v Response>] = HueV2Response<$v>;
         }
     };
 }
