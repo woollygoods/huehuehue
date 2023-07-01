@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2](https://github.com/KyrillGobber/huehuehue/compare/v0.0.1...v0.0.2) (2023-07-01)
+
+
+### Features
+
+* Added custom colors and tailwind-scrollbar ([b072b1c](https://github.com/KyrillGobber/huehuehue/commit/b072b1c364f127edb0d1fdd2c09555886a06ba46))
+* Added folder setup + styling features ([7154d75](https://github.com/KyrillGobber/huehuehue/commit/7154d757056ff0bdaf01e28916d6bba71c155d89))
+* Added new app icons (testing macos) ([a9e115a](https://github.com/KyrillGobber/huehuehue/commit/a9e115a1833cee90b5615229940675aac612e36e))
+
 ### 0.0.1 (2023-06-24)
 
 
