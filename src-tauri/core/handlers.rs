@@ -6,8 +6,6 @@ use tauri::State;
 use crate::core::transfer::*;
 use crate::{HueHueHueError, HueHueHueState};
 
-get!("/resource", resources, HueV2ResourceResponse);
-get!("/resource/{id}", resource, HueV2ResourceResponse, [id]);
 get!("/resource/light", lights, HueV2LightResponse);
 get!("/resource/light/{id}", light, HueV2LightResponse, [id]);
 get!("/resource/scene", scenes, HueV2SceneResponse);
@@ -110,6 +108,118 @@ get!(
     HueV2LightLevelResponse,
     [id]
 );
+get!("/resource/button", buttons, HueV2ButtonResponse);
+get!("/resource/button/{id}", button, HueV2ButtonResponse, [id]);
+get!(
+    "/resource/relative_rotary",
+    relative_rotaries,
+    HueV2RelativeRotaryResponse
+);
+get!(
+    "/resource/relative_rotary/{id}",
+    relative_rotary,
+    HueV2RelativeRotaryResponse,
+    [id]
+);
+get!(
+    "/resource/behaviour_script",
+    behaviour_scripts,
+    HueV2BehaviorScriptResponse
+);
+get!(
+    "/resource/behaviour_script/{id}",
+    behaviour_script,
+    HueV2BehaviorScriptResponse,
+    [id]
+);
+get!(
+    "/resource/behaviour_instance",
+    behaviour_instances,
+    HueV2BehaviorInstanceResponse
+);
+get!(
+    "/resource/behaviour_instance/{id}",
+    behaviour_instance,
+    HueV2BehaviorInstanceResponse,
+    [id]
+);
+get!(
+    "/resource/geofence_client",
+    geofence_clients,
+    HueV2GeofenceClientResponse
+);
+get!(
+    "/resource/behaviour_instance/{id}",
+    geofence_client,
+    HueV2GeofenceClientResponse,
+    [id]
+);
+get!(
+    "/resource/geolocation",
+    geolocations,
+    HueV2GeolocationResponse
+);
+get!(
+    "/resource/geolocation/{id}",
+    geolocation,
+    HueV2GeolocationResponse,
+    [id]
+);
+get!(
+    "/resource/entertainment_configuration",
+    entertainment_configurations,
+    HueV2EntertainmentConfigurationResponse
+);
+get!(
+    "/resource/entertainment_configuration/{id}",
+    entertainment_configuration,
+    HueV2EntertainmentConfigurationResponse,
+    [id]
+);
+get!(
+    "/resource/entertainment",
+    entertainments,
+    HueV2EntertainmentResponse
+);
+get!(
+    "/resource/entertainment/{id}",
+    entertainment,
+    HueV2EntertainmentResponse,
+    [id]
+);
+get!("/resource/homekit", homekits, HueV2HomekitResponse);
+get!(
+    "/resource/homekit/{id}",
+    homekit,
+    HueV2HomekitResponse,
+    [id]
+);
+get!("/resource/matter", matters, HueV2MatterResponse);
+get!("/resource/matter/{id}", matter, HueV2MatterResponse, [id]);
+get!(
+    "/resource/matter_fabric",
+    matter_fabrics,
+    HueV2MatterFabricResponse
+);
+get!(
+    "/resource/matter_fabric/{id}",
+    matter_fabric,
+    HueV2MatterFabricResponse,
+    [id]
+);
+get!("/resource", resources, HueV2ResourceResponse);
+get!("/resource/{id}", resource, HueV2ResourceResponse, [id]);
+get!(
+    "/resource/smart_scene",
+    smart_scenes,
+    HueV2SmartSceneResponse
+);
+get!(
+    "/resource/smart_scene/{id}",
+    smart_scene,
+    HueV2SmartSceneResponse,
+    [id]
+);
 
 #[tauri::command]
 #[specta::specta]
@@ -134,8 +244,6 @@ pub async fn get_discovered_bridges(
 }
 
 handlers!(
-    get_resources,
-    get_resource,
     get_lights,
     get_light,
     get_scenes,
@@ -164,6 +272,32 @@ handlers!(
     get_temperature,
     get_light_levels,
     get_light_level,
+    get_buttons,
+    get_button,
+    get_relative_rotaries,
+    get_relative_rotary,
+    get_behaviour_scripts,
+    get_behaviour_script,
+    get_behaviour_instances,
+    get_behaviour_instance,
+    get_geofence_clients,
+    get_geofence_client,
+    get_geolocations,
+    get_geolocation,
+    get_entertainment_configurations,
+    get_entertainment_configuration,
+    get_entertainments,
+    get_entertainment,
+    get_homekits,
+    get_homekit,
+    get_matters,
+    get_matter,
+    get_matter_fabrics,
+    get_matter_fabric,
+    get_resources,
+    get_resource,
+    get_smart_scenes,
+    get_smart_scene,
     set_selected_bridge,
     get_discovered_bridges
 );
