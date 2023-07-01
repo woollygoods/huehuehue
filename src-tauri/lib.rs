@@ -11,6 +11,7 @@ use tokio::sync::Mutex;
 
 const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
 const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 1;
+const HUE_BRIDGE_API_SCHEMA: &str = "https://";
 const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
 
 #[derive(Debug, Default)]
@@ -60,8 +61,10 @@ impl HueHueHue {
     }
 
     fn get_base_url(&self) -> String {
-        // TODO: compute the actual base url using the currently selected bridge device
-        HUE_BRIDGE_API_BASE_URL.to_string()
+        format!(
+            "{}{}{}",
+            HUE_BRIDGE_API_SCHEMA, self.selected_bridge, HUE_BRIDGE_API_BASE_URL
+        )
     }
 
     pub fn discover(&self) -> Result<(), HueHueHueError> {
