@@ -29,59 +29,25 @@ macro_rules! endpoint {
     };
 }
 
-macro_rules! get {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(get, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
+macro_rules! http_method {
+    ($method:ident) => {
+        macro_rules! $method {
+            ($$endpoint:expr, $$endpointname:ident, $$returntype:ident $$(, $$body:ident)? $$(, [$$($$param:expr),+])?) => {
+                endpoint!($method, $$endpoint, $$endpointname, $returntype $$(, $$body)? $$(, [$$($$param),+])?);
+            };
+        }
     };
 }
 
-macro_rules! head {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(head, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
-    };
-}
-
-macro_rules! post {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(post, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
-    };
-}
-
-macro_rules! put {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(put, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
-    };
-}
-
-macro_rules! delete {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(delete, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
-    };
-}
-
-macro_rules! connect {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(connect, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
-    };
-}
-
-macro_rules! options {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(options, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
-    };
-}
-
-macro_rules! trace {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(trace, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
-    };
-}
-
-macro_rules! patch {
-    ($endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
-        endpoint!(patch, $endpoint, $endpointname, $returntype $(, $body)? $(, [$($param),+])?);
-    };
-}
+http_method!(get);
+http_method!(head);
+http_method!(post);
+http_method!(put);
+http_method!(delete);
+http_method!(connect);
+http_method!(options);
+http_method!(trace);
+http_method!(patch);
 
 macro_rules! handlers {
     ($($handler:ident),*) => {

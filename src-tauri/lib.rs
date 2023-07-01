@@ -1,3 +1,4 @@
+#![feature(macro_metavar_expr)]
 pub mod core;
 
 use clap::Parser;
