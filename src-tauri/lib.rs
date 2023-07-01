@@ -14,7 +14,7 @@ const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
 const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 3600;
 const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
 
-#[derive(Clone, Debug, Parser)]
+#[derive(Debug, Parser)]
 #[command(author, version, about)]
 pub struct HueHueHueConfig {
     #[arg(long)]
@@ -54,8 +54,8 @@ impl serde::Serialize for HueHueHueError {
 }
 
 impl HueHueHue {
-    pub fn get_config(&self) -> HueHueHueConfig {
-        self.config.clone()
+    pub fn get_config(&self) -> &HueHueHueConfig {
+        &self.config
     }
 
     fn get_base_url(&self) -> String {

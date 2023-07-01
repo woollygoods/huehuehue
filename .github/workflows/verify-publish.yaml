@@ -32,21 +32,23 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: install cargo-fmt
+        run: rustup component add rustfmt
+      - name: install cargo-clippy
+        run: rustup component add clippy
+      - name: run cargo:fmt
+        run: cd src-tauri && cargo fmt --all -- --check
       - name: install frontend dependencies
         run: yarn install
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run cargo:test
-        run: cd src-tauri && cargo test --verbose --all-features
-      - name: Run cargo:fmt
-        run: cd src-tauri && cargo fmt --all -- --check
-      - name: Run cargo:clippy
+      - name: run cargo:clippy
         run: cd src-tauri && cargo clippy --all-features -- -D warnings
-      - name: Setup Tarpaulin
+      - name: setup Tarpaulin
         run: cd src-tauri && cargo install cargo-tarpaulin
         continue-on-error: true
-      - name: Run cargo:tarpaulin
+      - name: run cargo:tarpaulin (runs cargo test)
         run: cd src-tauri && cargo tarpaulin --verbose --all-features --out Xml --output-dir ./coverage
       - name: Codecov
         uses: codecov/codecov-action@v3
