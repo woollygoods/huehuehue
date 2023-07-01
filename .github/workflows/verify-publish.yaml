@@ -61,7 +61,7 @@ jobs:
     permissions:
       contents: write
     needs: [ verify ]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -94,12 +94,12 @@ jobs:
           git checkout develop 
           git pull
           git merge main
-          git push --follow-tags origin develop
+          git push
           git checkout main
 
   create-release:
     needs: [ verify, versioning ]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'chore(release):')
     permissions:
       contents: write
     runs-on: ubuntu-20.04
@@ -156,7 +156,7 @@ jobs:
 
   build-tauri:
     needs: create-release
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'chore(release):')
     permissions:
       contents: write
     strategy:
@@ -193,7 +193,7 @@ jobs:
   publish-release:
     permissions:
       contents: write
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-20.04
     needs: [ create-release, build-tauri ]
 
