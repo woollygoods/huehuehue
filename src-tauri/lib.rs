@@ -1,7 +1,6 @@
 #![feature(macro_metavar_expr)]
 pub mod core;
 
-use clap::Parser;
 use futures_util::{pin_mut, stream::StreamExt};
 use log::info;
 use mdns::RecordKind;
@@ -14,22 +13,12 @@ const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
 const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 3600;
 const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
 
-#[derive(Debug, Parser)]
-#[command(author, version, about)]
-pub struct HueHueHueConfig {
-    #[arg(long)]
-    pub generate_bindings_only: bool,
-}
-
-impl Default for HueHueHueConfig {
-    fn default() -> Self {
-        HueHueHueConfig::parse()
-    }
-}
+#[derive(Debug, Default)]
+pub struct HueHueHueBackendConfig {}
 
 #[derive(Debug, Default)]
 pub struct HueHueHue {
-    config: HueHueHueConfig,
+    _config: HueHueHueBackendConfig,
     bridge_ip_addrs: Arc<Mutex<HashSet<IpAddr>>>,
     client: Client,
 }
@@ -54,8 +43,11 @@ impl serde::Serialize for HueHueHueError {
 }
 
 impl HueHueHue {
-    pub fn get_config(&self) -> &HueHueHueConfig {
-        &self.config
+    pub fn with_config(config: impl Into<HueHueHueBackendConfig>) -> HueHueHue {
+        HueHueHue {
+            _config: config.into(),
+            ..Default::default()
+        }
     }
 
     fn get_base_url(&self) -> String {
