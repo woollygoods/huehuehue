@@ -17,15 +17,25 @@ struct HueHueHueConfig {
     command: Option<Command>,
 }
 
-impl From<HueHueHueConfig> for HueHueHueBackendConfig {
-    fn from(_val: HueHueHueConfig) -> Self {
+impl From<&HueHueHueConfig> for HueHueHueBackendConfig {
+    fn from(_val: &HueHueHueConfig) -> Self {
         HueHueHueBackendConfig::default()
     }
 }
 
 #[derive(Debug, Subcommand)]
 enum Command {
+    Discover(DiscoveryConfig),
     GenerateBindings(BindingsConfig),
+}
+
+#[derive(Debug, Args)]
+struct DiscoveryConfig {}
+
+impl From<&DiscoveryConfig> for HueHueHueBackendConfig {
+    fn from(_val: &DiscoveryConfig) -> Self {
+        HueHueHueBackendConfig::default()
+    }
 }
 
 #[derive(Debug, Args)]
@@ -40,13 +50,17 @@ struct BindingsConfig {
 async fn command(command: &Command) -> Result<bool, HueHueHueError> {
     info!("running command config: {:?}", command);
     match command {
-        Command::GenerateBindings(bindings_config) => {
-            let path = bindings_config.output.as_str();
+        Command::Discover(config) => {
+            HueHueHue::with_config(config).discover().await??;
+            return Ok(true);
+        }
+        Command::GenerateBindings(config) => {
+            let path = config.output.as_str();
             info!("generating bindings to \"{}\"", path);
             bindings!(path);
             info!("successfully generated bindings to \"{}\"", path);
 
-            if bindings_config.only {
+            if config.only {
                 return Ok(true);
             }
         }
@@ -68,9 +82,9 @@ pub async fn main() -> Result<(), HueHueHueError> {
             return Ok(());
         }
     }
-    let huehuehue: HueHueHue = HueHueHue::with_config(config);
+    let huehuehue: HueHueHue = HueHueHue::with_config(&config);
     info!("starting huehuehue...");
-    huehuehue.discover()?;
+    huehuehue.discover();
     huehuehue_handlers!(tauri::Builder::default())
         .manage(HueHueHueState(Mutex::new(huehuehue)))
         .build(tauri::generate_context!())

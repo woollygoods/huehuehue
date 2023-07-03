@@ -7,7 +7,7 @@ use mdns::RecordKind;
 use reachable::*;
 use reqwest::Client;
 use std::{collections::HashMap, net::IpAddr, sync::Arc, time::Duration};
-use tokio::sync::Mutex;
+use tokio::{sync::Mutex, task::JoinHandle};
 
 const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
 const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 1;
@@ -33,6 +33,8 @@ pub enum HueHueHueError {
     MdnsError(#[from] mdns::Error),
     #[error(transparent)]
     ReqwestError(#[from] reqwest::Error),
+    #[error(transparent)]
+    TokioError(#[from] tokio::task::JoinError),
 }
 
 impl serde::Serialize for HueHueHueError {
@@ -67,7 +69,7 @@ impl HueHueHue {
         )
     }
 
-    pub fn discover(&self) -> Result<(), HueHueHueError> {
+    pub fn discover(&self) -> JoinHandle<Result<(), HueHueHueError>> {
         let addrs = self.bridges.clone();
         tokio::spawn(async move {
             info!(
@@ -100,9 +102,7 @@ impl HueHueHue {
                 }
             }
 
-            Ok::<(), HueHueHueError>(())
-        });
-
-        Ok(())
+            Ok(())
+        })
     }
 }
