@@ -1,4 +1,4 @@
-use std::{collections::HashMap, net::IpAddr};
+use std::net::IpAddr;
 
 use tauri::State;
 
@@ -237,10 +237,15 @@ pub async fn set_selected_bridge(
 #[specta::specta]
 pub async fn get_discovered_bridges(
     state: State<'_, HueHueHueState>,
-) -> Result<HashMap<String, IpAddr>, HueHueHueError> {
+) -> Result<Vec<(String, IpAddr)>, HueHueHueError> {
     let huehuehue = state.0.lock().await;
 
-    Ok(huehuehue.get_discovered_bridges().await)
+    Ok(huehuehue
+        .get_discovered_bridges()
+        .await
+        .iter()
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect())
 }
 
 handlers!(

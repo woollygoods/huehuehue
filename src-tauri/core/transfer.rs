@@ -766,73 +766,109 @@ pub struct HueV2DevicePower {
 hue_v2_res!(HueV2DevicePower);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2ZigbeeBridgeConnectivity {}
+pub struct HueV2ZigbeeBridgeConnectivity {
+    string: String,
+}
 hue_v2_res!(HueV2ZigbeeBridgeConnectivity);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2ZigbeeConnectivity {}
+pub struct HueV2ZigbeeConnectivity {
+    string: String,
+}
 hue_v2_res!(HueV2ZigbeeConnectivity);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2ZgpConnectivity {}
+pub struct HueV2ZgpConnectivity {
+    string: String,
+}
 hue_v2_res!(HueV2ZgpConnectivity);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2Bridge {}
+pub struct HueV2Bridge {
+    string: String,
+}
 hue_v2_res!(HueV2Bridge);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2ZigbeeDeviceDiscovery {}
+pub struct HueV2ZigbeeDeviceDiscovery {
+    string: String,
+}
 hue_v2_res!(HueV2ZigbeeDeviceDiscovery);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2Homekit {}
+pub struct HueV2Homekit {
+    string: String,
+}
 hue_v2_res!(HueV2Homekit);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2Matter {}
+pub struct HueV2Matter {
+    string: String,
+}
 hue_v2_res!(HueV2Matter);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2MatterFabric {}
+pub struct HueV2MatterFabric {
+    string: String,
+}
 hue_v2_res!(HueV2MatterFabric);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2Scene {}
+pub struct HueV2Scene {
+    string: String,
+}
 hue_v2_res!(HueV2Scene);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2EntertainmentConfiguration {}
+pub struct HueV2EntertainmentConfiguration {
+    string: String,
+}
 hue_v2_res!(HueV2EntertainmentConfiguration);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2PublicImage {}
+pub struct HueV2PublicImage {
+    string: String,
+}
 hue_v2_res!(HueV2PublicImage);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2AuthV1 {}
+pub struct HueV2AuthV1 {
+    string: String,
+}
 hue_v2_res!(HueV2AuthV1);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2BehaviorScript {}
+pub struct HueV2BehaviorScript {
+    string: String,
+}
 hue_v2_res!(HueV2BehaviorScript);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2BehaviorInstance {}
+pub struct HueV2BehaviorInstance {
+    string: String,
+}
 hue_v2_res!(HueV2BehaviorInstance);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2Geofence {}
+pub struct HueV2Geofence {
+    string: String,
+}
 hue_v2_res!(HueV2Geofence);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2GeofenceClient {}
+pub struct HueV2GeofenceClient {
+    string: String,
+}
 hue_v2_res!(HueV2GeofenceClient);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2Geolocation {}
+pub struct HueV2Geolocation {
+    string: String,
+}
 hue_v2_res!(HueV2Geolocation);
 
 #[derive(Debug, Deserialize, Serialize, Type)]
-pub struct HueV2SmartScene {}
+pub struct HueV2SmartScene {
+    string: String,
+}
 hue_v2_res!(HueV2SmartScene);
