@@ -244,7 +244,7 @@ pub async fn get_discovered_bridges(
         .get_discovered_bridges()
         .await
         .iter()
-        .map(|(k, v)| (k.clone(), v.clone()))
+        .map(|(k, v)| (k.clone(), *v))
         .collect())
 }
 

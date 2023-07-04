@@ -40,6 +40,8 @@ jobs:
         run: rustup component add clippy
       - name: run cargo:fmt
         run: cd src-tauri && cargo fmt --all -- --check
+      - name: generate ts bindings
+        run: cd src-tauri && cargo run -q -- generate-bindings --only
       - name: install frontend dependencies
         run: yarn install
       - uses: tauri-apps/tauri-action@v0
@@ -182,6 +184,8 @@ jobs:
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
       - name: pull latest commit
         run: git pull
+      - name: generate ts bindings
+        run: cd src-tauri && cargo run -q -- generate-bindings --only
       - name: install frontend dependencies
         run: yarn install
       - uses: tauri-apps/tauri-action@v0
