@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/KyrillGobber/huehuehue/compare/v0.0.2...v0.0.3) (2023-07-07)
+
+
+### Bug Fixes
+
+* switch to sveltekit ([8e6dd8c](https://github.com/KyrillGobber/huehuehue/commit/8e6dd8c0ecf4bd95f9af43421d1bdf4e183a6f8d))
+
 ### [0.0.2](https://github.com/KyrillGobber/huehuehue/compare/v0.0.1...v0.0.2) (2023-07-01)
 
 

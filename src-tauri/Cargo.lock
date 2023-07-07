@@ -1620,7 +1620,7 @@ checksum = "c4a1e36c821dbe04574f602848a19f742f4fb3c98d40449f11bcad18d6b17421"
 
 [[package]]
 name = "huehuehue"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "clap",
  "env_logger",
