@@ -89,9 +89,11 @@ jobs:
           git fetch --unshallow
           yarn run release
           VERSION=$(cat package.json | jq -r '.version')
+          git tag -d v$VERSION
           (cd src-tauri && cargo set-version $VERSION)
           (cd src-tauri && jq ".package.version = \"$VERSION\"" tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json)
           git commit --amend -am "chore(release): $VERSION"
+          git tag -a v$VERSION
           git push --follow-tags origin main
           git checkout develop 
           git pull
