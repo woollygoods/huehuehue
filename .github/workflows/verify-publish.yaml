@@ -93,7 +93,7 @@ jobs:
           (cd src-tauri && cargo set-version $VERSION)
           (cd src-tauri && jq ".package.version = \"$VERSION\"" tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json)
           git commit --amend -am "chore(release): $VERSION"
-          git tag -a v$VERSION
+          git tag -a v$VERSION -m "chore(release): $VERSION"
           git push --follow-tags origin main
           git checkout develop 
           git pull
