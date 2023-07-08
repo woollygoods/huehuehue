@@ -4,8 +4,8 @@ version = "0.0.4"
 description = "A Tauri App to manage your Philips Hue devices from anywhere"
 authors = [
     "Kyrill Gobber <kyrill@gobber.ch>",
-    "Soryn Bächli <>",
-    "Cedric Schwyter <cedricschwyter@bluewin.ch>",
+    "Soryn Bächli <contact@soryn.dev>",
+    "Cedric Schwyter <cedric@schwyter.io>",
 ]
 license = ""
 repository = "https://github.com/KyrillGobber/huehuehue"

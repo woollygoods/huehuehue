@@ -82,7 +82,7 @@ pub async fn main() -> Result<(), HueHueHueError> {
             return Ok(());
         }
     }
-    let huehuehue: HueHueHue = HueHueHue::with_config(&config);
+    let mut huehuehue: HueHueHue = HueHueHue::with_config(&config);
     info!("starting huehuehue...");
     huehuehue.discover();
     huehuehue_handlers!(tauri::Builder::default())

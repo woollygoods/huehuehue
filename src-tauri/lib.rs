@@ -7,7 +7,10 @@ use mdns::RecordKind;
 use reachable::*;
 use reqwest::Client;
 use std::{collections::HashMap, net::IpAddr, sync::Arc, time::Duration};
-use tokio::{sync::Mutex, task::JoinHandle};
+use tokio::{
+    sync::Mutex,
+    task::{AbortHandle, JoinHandle},
+};
 
 const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
 const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 1;
@@ -23,6 +26,7 @@ pub struct HueHueHue {
     bridges: Arc<Mutex<HashMap<String, IpAddr>>>,
     selected_bridge: String,
     client: Client,
+    discovery_abort_handle: Option<AbortHandle>,
 }
 
 pub struct HueHueHueState(pub Mutex<HueHueHue>);
@@ -54,8 +58,10 @@ impl HueHueHue {
         }
     }
 
-    pub fn set_selected_bridge(&mut self, mdns_name: String) {
+    pub fn set_selected_bridge(&mut self, mdns_name: String) -> Result<(), HueHueHueError> {
         self.selected_bridge = mdns_name;
+
+        self.abort_discover()
     }
 
     pub async fn get_discovered_bridges(&self) -> HashMap<String, IpAddr> {
@@ -69,9 +75,17 @@ impl HueHueHue {
         )
     }
 
-    pub fn discover(&self) -> JoinHandle<Result<(), HueHueHueError>> {
+    pub fn abort_discover(&mut self) -> Result<(), HueHueHueError> {
+        if let Some(handle) = &self.discovery_abort_handle {
+            handle.abort();
+        }
+
+        Ok(())
+    }
+
+    pub fn discover(&mut self) -> JoinHandle<Result<(), HueHueHueError>> {
         let addrs = self.bridges.clone();
-        tokio::spawn(async move {
+        let discovery_handle = tokio::spawn(async move {
             info!(
                 "initiating hue bridge discovery mDNS query service for address \"{}\"...",
                 HUE_BRIDGE_SERVICE_NAME
@@ -103,6 +117,10 @@ impl HueHueHue {
             }
 
             Ok(())
-        })
+        });
+
+        self.discovery_abort_handle = Some(discovery_handle.abort_handle());
+
+        discovery_handle
     }
 }

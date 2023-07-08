@@ -228,7 +228,7 @@ pub async fn set_selected_bridge(
     state: State<'_, HueHueHueState>,
 ) -> Result<(), HueHueHueError> {
     let mut huehuehue = state.0.lock().await;
-    huehuehue.set_selected_bridge(mdns_name);
+    huehuehue.set_selected_bridge(mdns_name)?;
 
     Ok(())
 }
@@ -246,6 +246,14 @@ pub async fn get_discovered_bridges(
         .iter()
         .map(|(k, v)| (k.clone(), *v))
         .collect())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn abort_discover(state: State<'_, HueHueHueState>) -> Result<(), HueHueHueError> {
+    let mut huehuehue = state.0.lock().await;
+
+    huehuehue.abort_discover()
 }
 
 handlers!(
@@ -304,5 +312,6 @@ handlers!(
     get_smart_scenes,
     get_smart_scene,
     set_selected_bridge,
-    get_discovered_bridges
+    get_discovered_bridges,
+    abort_discover
 );
