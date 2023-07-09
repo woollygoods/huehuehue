@@ -2,7 +2,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - master
 
 name: Verify & Publish
 
@@ -63,7 +63,7 @@ jobs:
     permissions:
       contents: write
     needs: [ verify ]
-    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'chore(release):')
+    if: github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -94,16 +94,16 @@ jobs:
           (cd src-tauri && jq ".package.version = \"$VERSION\"" tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json)
           git commit --amend -am "chore(release): $VERSION"
           git tag -a v$VERSION -m "chore(release): $VERSION"
-          git push --follow-tags origin main
+          git push --follow-tags origin master
           git checkout develop 
           git pull
-          git merge main
+          git merge master
           git push
-          git checkout main
+          git checkout master
 
   create-release:
     needs: [ verify, versioning ]
-    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'chore(release):')
+    if: github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):')
     permissions:
       contents: write
     runs-on: ubuntu-20.04
@@ -160,7 +160,7 @@ jobs:
 
   build-tauri:
     needs: create-release
-    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'chore(release):')
+    if: github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):')
     permissions:
       contents: write
     strategy:
@@ -199,7 +199,7 @@ jobs:
   publish-release:
     permissions:
       contents: write
-    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'chore(release):')
+    if: github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-20.04
     needs: [ create-release, build-tauri ]
 
