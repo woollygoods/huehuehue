@@ -1,6 +1,6 @@
 [package]
 name = "huehuehue"
-version = "0.0.4"
+version = "0.0.5"
 description = "A Tauri App to manage your Philips Hue devices from anywhere"
 authors = [
     "Kyrill Gobber <kyrill@gobber.ch>",

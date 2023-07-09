@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/woollygoods/huehuehue/compare/v0.0.4...v0.0.5) (2023-07-09)
+
+
+### Features
+
+* provide `abortDiscover` handler ([dadd53e](https://github.com/woollygoods/huehuehue/commit/dadd53ee8e60aac039e3e9df6339f9719bfbfe17))
+
 ### [0.0.4](https://github.com/woollygoods/huehuehue/compare/v0.0.3...v0.0.4) (2023-07-07)
 
 
