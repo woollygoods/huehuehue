@@ -1,9 +1,9 @@
 <script>
+    import Greet from '$lib/Greet.svelte';
+    import Button from '$lib/primitives/Button.svelte';
+    import Input from '$lib/primitives/Input.svelte';
+    import Typeface from '$lib/primitives/Typeface.svelte';
     import { faGauge } from '@fortawesome/free-solid-svg-icons';
-    import Button from '../components/primitives/Button.svelte';
-    import Input from '../components/primitives/Input.svelte';
-    import Typeface from '../components/primitives/Typeface.svelte';
-    import Greet from '../lib/Greet.svelte';
 </script>
 
 <Typeface>Gaggi?</Typeface>
