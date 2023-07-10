@@ -4,10 +4,10 @@
     import Button from '$lib/components/primitives/Button.svelte';
     import LoadingSpinner from '$lib/components/primitives/LoadingSpinner.svelte';
     import Typeface from '$lib/components/primitives/Typeface.svelte';
+    import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
     import { getDiscoveredBridges } from '../../bindings';
 
     const bridges = getDiscoveredBridges();
-
     let selectedBridge: [string, string] | undefined = undefined;
 </script>
 
@@ -27,19 +27,22 @@
                 />
             {:else}
                 <div class="flex flex-col gap-3">
-                    <!-- <ul class="bg-ink-500 p-3 rounded-lg">
-                        {#each bridges as [mdns, ip]}
-                            <li><Typeface>{`${mdns} - ${ip}`}</Typeface></li>
-                        {/each}
-                        <li>
-                            <Typeface
-                                >0017884119b9.local - 192.168.1.219</Typeface
-                            >
-                        </li>
-                    </ul> -->
-                    <BridgesList {bridges} />
+                    <BridgesList
+                        {bridges}
+                        selected={selectedBridge}
+                        onSelectedBridge={(bridge) => {
+                            selectedBridge = bridge;
+                        }}
+                    />
+                    <Button
+                        icon={faArrowRight}
+                        iconOnRight
+                        label="Continue"
+                        disabled={selectedBridge === undefined}
+                        variant="nebula"
+                    />
                     <span
-                        class="bg-ink-500 px-3 py-2 rounded-lg flex flex-row gap-3 items-center justify-center opacity-75"
+                        class="mt-3 bg-ink-500 px-3 py-2 rounded-lg flex flex-row gap-3 items-center justify-center opacity-75"
                     >
                         <LoadingSpinner size="1.5x" />
                         <Typeface size="sm"

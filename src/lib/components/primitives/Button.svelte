@@ -1,7 +1,9 @@
 <script lang="ts">
     import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
     import { cva, type VariantProps } from 'class-variance-authority';
+    import Fa from 'svelte-fa/src/fa.svelte';
     import type { HTMLButtonAttributes } from 'svelte/elements';
+    import { twMerge } from 'tailwind-merge';
     import Icon from './Icon.svelte';
 
     let styling = cva('transition-colors px-4 py-2 font-semibold', {
@@ -43,11 +45,13 @@
         extends Partial<HTMLButtonAttributes>,
             Omit<VariantProps<typeof styling>, 'disabled'> {
         icon?: IconDefinition;
+        iconOnRight?: boolean;
         label: string;
         fullWidth?: boolean;
     }
 
     export let icon: $$Props['icon'] = undefined;
+    export let iconOnRight: $$Props['iconOnRight'] = false;
     export let label: $$Props['label'] = '';
     export let disabled: $$Props['disabled'] = false;
     export let fullWidth: $$Props['fullWidth'] = false;
@@ -68,7 +72,12 @@
         class: $$props.class,
     })}
 >
-    <span class="flex flex-row gap-2 items-center justify-center">
+    <span
+        class={twMerge(
+            'flex flex-row gap-2 items-center justify-center',
+            iconOnRight ? 'flex-row-reverse' : ''
+        )}
+    >
         <Icon {icon} variant={variant === 'dark' ? 'light' : 'dark'} />
         {label}</span
     >
