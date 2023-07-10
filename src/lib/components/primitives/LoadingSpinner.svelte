@@ -1,11 +1,13 @@
 <script lang="ts">
     import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
     import Icon from './Icon.svelte';
+
+    export let size: `${number}x` = '2x';
 </script>
 
 <Icon
     variant="light"
-    size="2x"
+    {size}
     icon={faCircleNotch}
-    class="animate-spin text-snow-300 opacity-75"
+    class="animate-spin text-snow-300"
 />
