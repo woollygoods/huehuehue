@@ -4,11 +4,17 @@
 use clap::{Args, Parser, Subcommand};
 use huehuehue::{
     bindings, core::handlers::*, huehuehue_handlers, HueHueHue, HueHueHueBackendConfig,
-    HueHueHueError, HueHueHueState,
+    HueHueHueBackendError, HueHueHueState,
 };
 use log::info;
 use tauri::RunEvent;
 use tokio::sync::Mutex;
+
+#[derive(Debug, thiserror::Error)]
+pub enum HueHueHueError {
+    #[error(transparent)]
+    BackendError(#[from] HueHueHueBackendError),
+}
 
 #[derive(Debug, Parser)]
 #[command(author, version, about)]
@@ -51,7 +57,11 @@ async fn command(command: &Command) -> Result<bool, HueHueHueError> {
     info!("running command config: {:?}", command);
     match command {
         Command::Discover(config) => {
-            HueHueHue::with_config(config).discover().await??;
+            HueHueHue::with_config(config)
+                .discover()
+                .await
+                .map_err(|e| Into::<HueHueHueBackendError>::into(e))??;
+
             return Ok(true);
         }
         Command::GenerateBindings(config) => {

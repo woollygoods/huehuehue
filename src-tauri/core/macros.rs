@@ -4,7 +4,7 @@ macro_rules! endpoint {
     ($method:expr, $endpoint:expr, $endpointname:ident, $returntype:ident $(, $body:ident)? $(, [$($param:expr),+])?) => {
         paste::paste! {
             impl crate::HueHueHue {
-                pub async fn [<$method:lower _ $endpointname>](&self $(, body: $body)? $(, $($param: impl Into<String>),+)?) -> Result<$returntype, crate::HueHueHueError> {
+                pub async fn [<$method:lower _ $endpointname>](&self $(, body: $body)? $(, $($param: impl Into<String>),+)?) -> Result<$returntype, crate::HueHueHueBackendError> {
                     #[allow(unused_mut)]
                     let mut endpoint: String = $endpoint.into();
                     $($(endpoint = endpoint.replace(format!("{{{}}}", stringify!($param)).as_str(), $param.into().as_str()));+;)?
@@ -21,7 +21,7 @@ macro_rules! endpoint {
 
             #[tauri::command]
             #[specta::specta]
-            pub async fn [<$method:lower _ $endpointname>]($(body: $body, )? $($($param: String),+,)? state: tauri::State<'_, crate::HueHueHueState>) -> Result<$returntype, crate::HueHueHueError> {
+            pub async fn [<$method:lower _ $endpointname>]($(body: $body, )? $($($param: String),+,)? state: tauri::State<'_, crate::HueHueHueState>) -> Result<$returntype, crate::HueHueHueBackendError> {
                 let huehuehue = state.0.lock().await;
                 crate::HueHueHue::[<$method:lower _ $endpointname>](&huehuehue $(,body as $body)? $(,$($param)+)?).await
             }

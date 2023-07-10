@@ -12,7 +12,7 @@ use tokio::{
     task::{AbortHandle, JoinHandle},
 };
 
-const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
+pub const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
 const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 1;
 const HUE_BRIDGE_API_SCHEMA: &str = "https://";
 const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
@@ -32,7 +32,7 @@ pub struct HueHueHue {
 pub struct HueHueHueState(pub Mutex<HueHueHue>);
 
 #[derive(Debug, thiserror::Error)]
-pub enum HueHueHueError {
+pub enum HueHueHueBackendError {
     #[error(transparent)]
     MdnsError(#[from] mdns::Error),
     #[error(transparent)]
@@ -41,7 +41,7 @@ pub enum HueHueHueError {
     TokioError(#[from] tokio::task::JoinError),
 }
 
-impl serde::Serialize for HueHueHueError {
+impl serde::Serialize for HueHueHueBackendError {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
@@ -58,7 +58,7 @@ impl HueHueHue {
         }
     }
 
-    pub fn set_selected_bridge(&mut self, mdns_name: String) -> Result<(), HueHueHueError> {
+    pub fn set_selected_bridge(&mut self, mdns_name: String) -> Result<(), HueHueHueBackendError> {
         self.selected_bridge = mdns_name;
 
         self.abort_discover()
@@ -75,7 +75,7 @@ impl HueHueHue {
         )
     }
 
-    pub fn abort_discover(&mut self) -> Result<(), HueHueHueError> {
+    pub fn abort_discover(&mut self) -> Result<(), HueHueHueBackendError> {
         if let Some(handle) = &self.discovery_abort_handle {
             handle.abort();
         }
@@ -83,7 +83,7 @@ impl HueHueHue {
         Ok(())
     }
 
-    pub fn discover(&mut self) -> JoinHandle<Result<(), HueHueHueError>> {
+    pub fn discover(&mut self) -> JoinHandle<Result<(), HueHueHueBackendError>> {
         let addrs = self.bridges.clone();
         let discovery_handle = tokio::spawn(async move {
             info!(

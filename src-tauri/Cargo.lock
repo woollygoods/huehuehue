@@ -1624,6 +1624,7 @@ version = "0.0.5"
 dependencies = [
  "clap",
  "env_logger",
+ "futures",
  "futures-util",
  "log",
  "mdns",

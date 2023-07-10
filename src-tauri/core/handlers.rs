@@ -4,7 +4,7 @@ use tauri::State;
 
 #[allow(unused_imports)]
 use crate::core::transfer::*;
-use crate::{HueHueHueError, HueHueHueState};
+use crate::{HueHueHueBackendError, HueHueHueState};
 
 get!("/resource/light", lights, HueV2LightResponse);
 get!("/resource/light/{id}", light, HueV2LightResponse, [id]);
@@ -226,7 +226,7 @@ get!(
 pub async fn set_selected_bridge(
     mdns_name: String,
     state: State<'_, HueHueHueState>,
-) -> Result<(), HueHueHueError> {
+) -> Result<(), HueHueHueBackendError> {
     let mut huehuehue = state.0.lock().await;
     huehuehue.set_selected_bridge(mdns_name)?;
 
@@ -237,7 +237,7 @@ pub async fn set_selected_bridge(
 #[specta::specta]
 pub async fn get_discovered_bridges(
     state: State<'_, HueHueHueState>,
-) -> Result<Vec<(String, IpAddr)>, HueHueHueError> {
+) -> Result<Vec<(String, IpAddr)>, HueHueHueBackendError> {
     let huehuehue = state.0.lock().await;
 
     Ok(huehuehue
@@ -250,7 +250,7 @@ pub async fn get_discovered_bridges(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn abort_discover(state: State<'_, HueHueHueState>) -> Result<(), HueHueHueError> {
+pub async fn abort_discover(state: State<'_, HueHueHueState>) -> Result<(), HueHueHueBackendError> {
     let mut huehuehue = state.0.lock().await;
 
     huehuehue.abort_discover()
