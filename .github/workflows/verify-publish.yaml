@@ -2,7 +2,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - master
 
 name: Verify & Publish
 
@@ -12,10 +12,12 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: stable
+          toolchain: nightly
       - name: Setup Cache
         uses: actions/cache@v3
         continue-on-error: false
@@ -32,35 +34,41 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: install cargo-fmt
+        run: rustup component add rustfmt
+      - name: install cargo-clippy
+        run: rustup component add clippy
+      - name: run cargo:fmt
+        run: cd src-tauri && cargo fmt --all -- --check
+      - name: generate ts bindings
+        run: cd src-tauri && cargo run -q -- generate-bindings --only
       - name: install frontend dependencies
         run: yarn install
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup Tarpaulin
+      - name: run cargo:clippy
+        run: cd src-tauri && cargo clippy --all-features -- -D warnings
+      - name: setup Tarpaulin
         run: cd src-tauri && cargo install cargo-tarpaulin
         continue-on-error: true
-      - name: Run cargo:fmt
-        run: cd src-tauri && cargo fmt --all -- --check
-      - name: Run cargo:clippy
-        run: cd src-tauri && cargo clippy --all-features -- -D warnings
-      - name: Run cargo:test
-        run: cd src-tauri && cargo test --verbose --all-features
-      - name: Run cargo:tarpaulin
+      - name: run cargo:tarpaulin (runs cargo test)
         run: cd src-tauri && cargo tarpaulin --verbose --all-features --out Xml --output-dir ./coverage
       - name: Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: ./coverage/cobertura.xml
+          files: ./src-tauri/coverage/cobertura.xml
 
   versioning:
     permissions:
       contents: write
     needs: [ verify ]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
       - name: setup node
         uses: actions/setup-node@v3
         with:
@@ -69,7 +77,7 @@ jobs:
         run: yarn install
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly
       - uses: actions-rs/cargo@v1
         with:
           command: install
@@ -81,19 +89,21 @@ jobs:
           git fetch --unshallow
           yarn run release
           VERSION=$(cat package.json | jq -r '.version')
+          git tag -d v$VERSION
           (cd src-tauri && cargo set-version $VERSION)
           (cd src-tauri && jq ".package.version = \"$VERSION\"" tauri.conf.json > tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json)
           git commit --amend -am "chore(release): $VERSION"
-          git push --follow-tags origin main
+          git tag -a v$VERSION -m "chore(release): $VERSION"
+          git push --follow-tags origin master
           git checkout develop 
           git pull
-          git merge main
-          git push --follow-tags origin develop
-          git checkout main
+          git merge master
+          git push
+          git checkout master
 
   create-release:
     needs: [ verify, versioning ]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):')
     permissions:
       contents: write
     runs-on: ubuntu-20.04
@@ -102,6 +112,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
       - name: setup node
         uses: actions/setup-node@v3
         with:
@@ -148,7 +160,7 @@ jobs:
 
   build-tauri:
     needs: create-release
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):')
     permissions:
       contents: write
     strategy:
@@ -159,12 +171,14 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
       - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - name: install Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-20.04'
         run: |
@@ -172,6 +186,8 @@ jobs:
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
       - name: pull latest commit
         run: git pull
+      - name: generate ts bindings
+        run: cd src-tauri && cargo run -q -- generate-bindings --only
       - name: install frontend dependencies
         run: yarn install
       - uses: tauri-apps/tauri-action@v0
@@ -183,7 +199,7 @@ jobs:
   publish-release:
     permissions:
       contents: write
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-20.04
     needs: [ create-release, build-tauri ]
 

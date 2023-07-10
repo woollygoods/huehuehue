@@ -1,3 +1,4 @@
+#![feature(macro_metavar_expr)]
 pub mod core;
 
 use futures_util::{pin_mut, stream::StreamExt};
@@ -5,21 +6,27 @@ use log::info;
 use mdns::RecordKind;
 use reachable::*;
 use reqwest::Client;
-use std::{collections::HashSet, net::IpAddr, sync::Arc, time::Duration};
-use tokio::sync::Mutex;
+use std::{collections::HashMap, net::IpAddr, sync::Arc, time::Duration};
+use tokio::{
+    sync::Mutex,
+    task::{AbortHandle, JoinHandle},
+};
 
 const HUE_BRIDGE_SERVICE_NAME: &str = "_hue._tcp.local";
-const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 3600;
+const HUE_BRIDGE_SERVICE_QUERY_INTERVAL_SECONDS: u64 = 1;
+const HUE_BRIDGE_API_SCHEMA: &str = "https://";
 const HUE_BRIDGE_API_BASE_URL: &str = "/clip/v2";
 
 #[derive(Debug, Default)]
-pub struct HueHueHueConfig {}
+pub struct HueHueHueBackendConfig {}
 
 #[derive(Debug, Default)]
 pub struct HueHueHue {
-    _config: HueHueHueConfig,
-    bridge_ip_addrs: Arc<Mutex<HashSet<IpAddr>>>,
+    _config: HueHueHueBackendConfig,
+    bridges: Arc<Mutex<HashMap<String, IpAddr>>>,
+    selected_bridge: String,
     client: Client,
+    discovery_abort_handle: Option<AbortHandle>,
 }
 
 pub struct HueHueHueState(pub Mutex<HueHueHue>);
@@ -30,6 +37,8 @@ pub enum HueHueHueError {
     MdnsError(#[from] mdns::Error),
     #[error(transparent)]
     ReqwestError(#[from] reqwest::Error),
+    #[error(transparent)]
+    TokioError(#[from] tokio::task::JoinError),
 }
 
 impl serde::Serialize for HueHueHueError {
@@ -42,14 +51,41 @@ impl serde::Serialize for HueHueHueError {
 }
 
 impl HueHueHue {
-    fn get_base_url(&self) -> String {
-        // TODO: compute the actual base url using the currently selected bridge device
-        HUE_BRIDGE_API_BASE_URL.to_string()
+    pub fn with_config(config: impl Into<HueHueHueBackendConfig>) -> HueHueHue {
+        HueHueHue {
+            _config: config.into(),
+            ..Default::default()
+        }
     }
 
-    pub fn discover(&self) -> Result<(), HueHueHueError> {
-        let addrs = self.bridge_ip_addrs.clone();
-        tokio::spawn(async move {
+    pub fn set_selected_bridge(&mut self, mdns_name: String) -> Result<(), HueHueHueError> {
+        self.selected_bridge = mdns_name;
+
+        self.abort_discover()
+    }
+
+    pub async fn get_discovered_bridges(&self) -> HashMap<String, IpAddr> {
+        self.bridges.lock().await.clone()
+    }
+
+    fn get_base_url(&self) -> String {
+        format!(
+            "{}{}{}",
+            HUE_BRIDGE_API_SCHEMA, self.selected_bridge, HUE_BRIDGE_API_BASE_URL
+        )
+    }
+
+    pub fn abort_discover(&mut self) -> Result<(), HueHueHueError> {
+        if let Some(handle) = &self.discovery_abort_handle {
+            handle.abort();
+        }
+
+        Ok(())
+    }
+
+    pub fn discover(&mut self) -> JoinHandle<Result<(), HueHueHueError>> {
+        let addrs = self.bridges.clone();
+        let discovery_handle = tokio::spawn(async move {
             info!(
                 "initiating hue bridge discovery mDNS query service for address \"{}\"...",
                 HUE_BRIDGE_SERVICE_NAME
@@ -62,25 +98,29 @@ impl HueHueHue {
             pin_mut!(stream);
 
             while let Some(Ok(resp)) = stream.next().await {
-                let addr: Option<IpAddr> = resp.records().find_map(|r| match r.kind {
-                    RecordKind::A(addr) => Some(addr.into()),
-                    RecordKind::AAAA(addr) => Some(addr.into()),
+                let addr: Option<(String, IpAddr)> = resp.records().find_map(|r| match r.kind {
+                    RecordKind::A(addr) => Some((r.name.clone(), addr.into())),
+                    RecordKind::AAAA(addr) => Some((r.name.clone(), addr.into())),
                     _ => None,
                 });
                 if let Some(addr) = addr {
                     info!(
-                        "mDNS response to service name query \"{}\" received from \"{}\"",
-                        HUE_BRIDGE_SERVICE_NAME, &addr
+                        "mDNS response to service name query \"{}\" received from \"{}\" (\"{}\")",
+                        HUE_BRIDGE_SERVICE_NAME, &addr.0, &addr.1
                     );
                     let mut addrs = addrs.lock().await;
-                    addrs.retain(|e| Into::<IcmpTarget>::into(*e).check_availability().is_ok());
-                    addrs.insert(addr);
+                    addrs.retain(|_, &mut e| {
+                        Into::<IcmpTarget>::into(e).check_availability().is_ok()
+                    });
+                    addrs.insert(addr.0, addr.1);
                 }
             }
 
-            Ok::<(), HueHueHueError>(())
+            Ok(())
         });
 
-        Ok(())
+        self.discovery_abort_handle = Some(discovery_handle.abort_handle());
+
+        discovery_handle
     }
 }

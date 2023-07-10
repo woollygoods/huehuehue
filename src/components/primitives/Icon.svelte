@@ -13,8 +13,12 @@
         },
     });
 
-    export let icon: IconDefinition | undefined = undefined;
-    export let variant: VariantProps<typeof styling>['variant'] = 'dark';
+    interface $$Props extends VariantProps<typeof styling> {
+        icon?: IconDefinition;
+    }
+
+    export let icon: $$Props['icon'] = undefined;
+    export let variant: $$Props['variant'] = 'dark';
 </script>
 
 {#if icon}

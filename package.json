@@ -1,15 +1,17 @@
 {
     "name": "huehuehue",
     "private": true,
-    "version": "0.0.1",
+    "version": "0.0.5",
     "type": "module",
     "scripts": {
         "dev:client": "vite",
         "build:client": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "dev": "tauri dev",
-        "build": "tauri build",
+        "bindings:debug": "cd src-tauri && cargo run -q -- generate-bindings --only",
+        "bindings:release": "cd src-tauri && cargo run -q --release -- generate-bindings --only",
+        "dev": "yarn run bindings:debug && tauri dev",
+        "build": "yarn run bindings:release && tauri build",
         "release": "standard-version"
     },
     "dependencies": {
@@ -23,22 +25,26 @@
         "tailwind-merge": "^1.13.2"
     },
     "devDependencies": {
-        "@sveltejs/vite-plugin-svelte": "^2.0.0",
+        "@sveltejs/adapter-auto": "^2.0.0",
+        "@sveltejs/adapter-static": "^1.0.0-next.50",
+        "@sveltejs/kit": "^1.20.4",
         "@tauri-apps/cli": "^1.4.0",
         "@tsconfig/svelte": "^3.0.0",
         "@types/node": "^18.7.10",
+        "@typescript-eslint/eslint-plugin": "^5.45.0",
+        "@typescript-eslint/parser": "^5.45.0",
         "autoprefixer": "^10.4.14",
         "postcss": "^8.4.23",
         "postcss-load-config": "^4.0.1",
         "standard-version": "^9.5.0",
-        "svelte": "^3.54.0",
-        "svelte-check": "^3.0.0",
+        "svelte": "^4.0.0",
+        "svelte-check": "^3.4.3",
         "svelte-preprocess": "^5.0.3",
         "svelte-routing": "^1.10.0",
         "tailwind-scrollbar": "^3.0.4",
         "tailwindcss": "^3.3.1",
         "tslib": "^2.4.1",
-        "typescript": "^4.9.5",
-        "vite": "^4.2.1"
+        "typescript": "^5.0.0",
+        "vite": "^4.3.6"
     }
 }

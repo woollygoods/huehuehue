@@ -10,7 +10,9 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+build
 *.local
+/.svelte-kit
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +24,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+src/bindings.ts

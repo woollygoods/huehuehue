@@ -3,12 +3,12 @@
         "beforeDevCommand": "yarn dev:client",
         "beforeBuildCommand": "yarn build:client",
         "devPath": "http://localhost:1420",
-        "distDir": "../dist",
-        "withGlobalTauri": false
+        "distDir": "../build",
+        "withGlobalTauri": true
     },
     "package": {
         "productName": "huehuehue",
-        "version": "0.0.1"
+        "version": "0.0.5"
     },
     "tauri": {
         "allowlist": {

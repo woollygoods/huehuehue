@@ -1,10 +1,12 @@
-<script lang="ts">
-    import { faAmbulance } from '@fortawesome/free-solid-svg-icons';
+<script>
+    import { faGauge } from '@fortawesome/free-solid-svg-icons';
     import Button from '../components/primitives/Button.svelte';
     import Input from '../components/primitives/Input.svelte';
     import Typeface from '../components/primitives/Typeface.svelte';
+    import Greet from '../lib/Greet.svelte';
 </script>
 
-<Typeface>this is text</Typeface>
-<Button icon={faAmbulance} label="lable" onClick={() => {}} size="md" />
+<Typeface>Gaggi?</Typeface>
+<Greet />
+<Button label="asdasd" icon={faGauge} />
 <Input />

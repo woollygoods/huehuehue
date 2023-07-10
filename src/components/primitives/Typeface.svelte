@@ -1,5 +1,6 @@
 <script lang="ts">
     import { cva, type VariantProps } from 'class-variance-authority';
+    import type { SvelteHTMLElements } from 'svelte/elements';
 
     let styling = cva('select-none', {
         variants: {
@@ -22,11 +23,14 @@
         },
     });
 
-    export let variant: VariantProps<typeof styling>['variant'] = 'light';
-    export let size: VariantProps<typeof styling>['size'] = 'md';
-    export let className: string = '';
+    interface $$Props
+        extends Partial<SvelteHTMLElements['p']>,
+            VariantProps<typeof styling> {}
+
+    export let variant: $$Props['variant'] = 'light';
+    export let size: $$Props['size'] = 'md';
 </script>
 
-<p {...$$props} class={styling({ variant, size, class: className })}>
+<p {...$$props} class={styling({ variant, size, class: $$props.class })}>
     <slot />
 </p>

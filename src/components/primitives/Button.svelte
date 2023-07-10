@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
     import { cva, type VariantProps } from 'class-variance-authority';
+    import type { HTMLButtonAttributes } from 'svelte/elements';
     import Icon from './Icon.svelte';
 
     let styling = cva('transition-colors px-4 py-2 font-semibold', {
@@ -34,20 +35,38 @@
         },
     });
 
-    export let icon: IconDefinition | undefined = undefined;
-    export let label: string;
-    export let onClick: () => void;
-    export let disabled: boolean = false;
-    export let fullWidth: boolean = false;
-    export let variant: VariantProps<typeof styling>['variant'] = 'dark';
-    export let rounding: VariantProps<typeof styling>['rounding'] = 'lg';
-    export let size: VariantProps<typeof styling>['size'] = 'lg';
+    /**
+     * This defines the props for this component.
+     * NOTE: 'disabled' is omit from the cva to use the actual button disabled prop.
+     */
+    interface $$Props
+        extends Partial<HTMLButtonAttributes>,
+            Omit<VariantProps<typeof styling>, 'disabled'> {
+        icon?: IconDefinition;
+        label: string;
+        fullWidth?: boolean;
+    }
+
+    export let icon: $$Props['icon'] = undefined;
+    export let label: $$Props['label'] = '';
+    export let disabled: $$Props['disabled'] = false;
+    export let fullWidth: $$Props['fullWidth'] = false;
+    export let variant: $$Props['variant'] = 'dark';
+    export let rounding: $$Props['rounding'] = 'lg';
+    export let size: $$Props['size'] = 'lg';
 </script>
 
 <button
-    class={styling({ variant, rounding, fullWidth, disabled, size })}
-    on:click={onClick}
-    {disabled}
+    on:click
+    {...$$props}
+    class={styling({
+        variant,
+        rounding,
+        fullWidth,
+        disabled,
+        size,
+        class: $$props.class,
+    })}
 >
     <span class="flex flex-row gap-2 items-center justify-center">
         <Icon {icon} variant={variant === 'dark' ? 'light' : 'dark'} />
