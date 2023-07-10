@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
     import { cva, type VariantProps } from 'class-variance-authority';
+    // @ts-ignore
     import Fa from 'svelte-fa/src/fa.svelte';
 
     const styling = cva('transition-colors', {
@@ -15,12 +16,15 @@
 
     interface $$Props extends VariantProps<typeof styling> {
         icon?: IconDefinition;
+        class?: string;
+        size?: `${number}x`;
     }
 
     export let icon: $$Props['icon'] = undefined;
     export let variant: $$Props['variant'] = 'dark';
+    export let size: $$Props['size'] = '1x';
 </script>
 
 {#if icon}
-    <Fa {icon} class={styling({ variant, class: $$props.class })} />
+    <Fa {icon} {size} fw class={styling({ variant, class: $$props.class })} />
 {/if}
