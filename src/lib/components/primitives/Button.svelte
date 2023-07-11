@@ -6,12 +6,14 @@
     import { twMerge } from 'tailwind-merge';
     import Icon from './Icon.svelte';
 
-    let styling = cva('transition-colors px-4 py-2 font-semibold', {
+    let styling = cva('transition-all px-4 py-2 font-semibold', {
         variants: {
             variant: {
                 dark: 'bg-ink-500 enabled:hover:bg-ink-600 text-snow-500',
                 light: 'bg-snow-500 enabled:hover:bg-snow-600 text-ink-400',
                 nebula: 'bg-nebula-500 enabled:hover:bg-nebula-600 text-ink-400',
+                nebulaSlightGradient:
+                    'bg-gradient-to-br from-nebula-400 to-nebula-600 hover:brightness-110',
             },
             rounding: {
                 full: 'rounded-full',
@@ -28,6 +30,9 @@
             },
             disabled: {
                 true: 'contrast-75 opacity-80',
+            },
+            shadow: {
+                true: 'shadow-md shadow-deepDark/10',
             },
         },
         defaultVariants: {
@@ -58,6 +63,7 @@
     export let variant: $$Props['variant'] = 'dark';
     export let rounding: $$Props['rounding'] = 'lg';
     export let size: $$Props['size'] = 'lg';
+    export let shadow: $$Props['shadow'] = false;
 </script>
 
 <button
@@ -69,6 +75,7 @@
         fullWidth,
         disabled,
         size,
+        shadow,
         class: $$props.class,
     })}
 >

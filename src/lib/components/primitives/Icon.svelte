@@ -3,6 +3,7 @@
     import { cva, type VariantProps } from 'class-variance-authority';
     // @ts-ignore
     import Fa from 'svelte-fa/src/fa.svelte';
+    import type { IconSize } from './types';
 
     const styling = cva('transition-colors', {
         variants: {
@@ -17,7 +18,7 @@
     interface $$Props extends VariantProps<typeof styling> {
         icon?: IconDefinition;
         class?: string;
-        size?: `${number}x`;
+        size?: IconSize;
     }
 
     export let icon: $$Props['icon'] = undefined;

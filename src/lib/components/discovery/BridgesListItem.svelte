@@ -14,7 +14,12 @@
 cursor-pointer transition-colors"
         on:click={() => onSelect([mdns, ip])}
     >
-        <Typeface>{ip} ({mdns})</Typeface>
-        <Checkbox checked={isSelected} class="ml-auto" />
+        <Typeface
+            >{ip}
+            <Typeface class="inline-flex opacity-50" size="sm"
+                >({mdns})</Typeface
+            ></Typeface
+        >
+        <Checkbox checked={isSelected} shadow class="ml-auto" />
     </button>
 </li>

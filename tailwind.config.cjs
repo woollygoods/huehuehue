@@ -8,6 +8,8 @@ const config = {
 
     theme: {
         colors: {
+            deepDark: '#000000',
+            albino: '#FFFFFF',
             ink: {
                 400: '#16141D',
                 500: '#211C29',
