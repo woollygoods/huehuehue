@@ -238,10 +238,10 @@
   resolved "https://registry.yarnpkg.com/@sveltejs/adapter-static/-/adapter-static-2.0.2.tgz#49afd27787fb73d789017d002a91031088494139"
   integrity sha512-9wYtf6s6ew7DHUHMrt55YpD1FgV7oWql2IGsW5BXquLxqcY9vjrqCFo0TzzDpo+ZPZkW/v77k0eOP6tsAb8HmQ==
 
-"@sveltejs/kit@^1.20.4":
-  version "1.21.0"
-  resolved "https://registry.npmjs.org/@sveltejs/kit/-/kit-1.21.0.tgz"
-  integrity sha512-CBsYoI34SjtOQp0eG85dmVnvTR3Pjs8VgAQhO0CgQja9BIorKl808F1X8EunPhCcyek5r5lKQE1Mmbi0RuzHqA==
+"@sveltejs/kit@^1.22.3":
+  version "1.22.3"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.22.3.tgz#2330eaa7db3e5ee592fd42a4d68cff9d12e9fe28"
+  integrity sha512-IpHD5wvuoOIHYaHQUBJ1zERD2Iz+fB/rBXhXjl8InKw6X4VKE9BSus+ttHhE7Ke+Ie9ecfilzX8BnWE3FeQyng==
   dependencies:
     "@sveltejs/vite-plugin-svelte" "^2.4.1"
     "@types/cookie" "^0.5.1"
@@ -347,10 +347,10 @@
     "@tauri-apps/cli-win32-ia32-msvc" "1.4.0"
     "@tauri-apps/cli-win32-x64-msvc" "1.4.0"
 
-"@tsconfig/svelte@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/@tsconfig/svelte/-/svelte-3.0.0.tgz"
-  integrity sha512-pYrtLtOwku/7r1i9AMONsJMVYAtk3hzOfiGNekhtq5tYBGA7unMve8RvUclKLMT3PrihvJqUmzsRGh0RP84hKg==
+"@tsconfig/svelte@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@tsconfig/svelte/-/svelte-5.0.0.tgz#0f99038516336a43c953e7b3f8a28dc511a51d9b"
+  integrity sha512-iu5BqFjU0+OcLTNQp7fHe6Bf6zdNeJ9IZjLZMqWLuGzVFm/xx+lm//Tf6koPyRmxo55/Snm6RRQ990n89cRKFw==
 
 "@types/cookie@^0.5.1":
   version "0.5.1"
@@ -2350,10 +2350,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svelte-check@^3.4.3:
-  version "3.4.4"
-  resolved "https://registry.npmjs.org/svelte-check/-/svelte-check-3.4.4.tgz"
-  integrity sha512-Uys9+R65cj8TmP8f5UpS7B2xKpNLYNxEWJsA5ZoKcWq/uwvABFF7xS6iPQGLoa7hxz0DS6xU60YFpmq06E4JxA==
+svelte-check@^3.4.6:
+  version "3.4.6"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-3.4.6.tgz#d43de724ad89d1198c96770e9d23965d3379ad44"
+  integrity sha512-OBlY8866Zh1zHQTkBMPS6psPi7o2umTUyj6JWm4SacnIHXpWFm658pG32m3dKvKFL49V4ntAkfFHKo4ztH07og==
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.17"
     chokidar "^3.4.1"
@@ -2361,7 +2361,7 @@ svelte-check@^3.4.3:
     import-fresh "^3.2.1"
     picocolors "^1.0.0"
     sade "^1.7.4"
-    svelte-preprocess "^5.0.3"
+    svelte-preprocess "^5.0.4"
     typescript "^5.0.3"
 
 svelte-hmr@^0.15.2:
@@ -2369,7 +2369,7 @@ svelte-hmr@^0.15.2:
   resolved "https://registry.npmjs.org/svelte-hmr/-/svelte-hmr-0.15.2.tgz"
   integrity sha512-q/bAruCvFLwvNbeE1x3n37TYFb3mTBJ6TrCq6p2CoFbSTNhDE9oAtEfpy+wmc9So8AG0Tja+X0/mJzX9tSfvIg==
 
-svelte-preprocess@^5.0.3:
+svelte-preprocess@^5.0.3, svelte-preprocess@^5.0.4:
   version "5.0.4"
   resolved "https://registry.npmjs.org/svelte-preprocess/-/svelte-preprocess-5.0.4.tgz"
   integrity sha512-ABia2QegosxOGsVlsSBJvoWeXy1wUKSfF7SWJdTjLAbx/Y3SrVevvvbFNQqrSJw89+lNSsM58SipmZJ5SRi5iw==
