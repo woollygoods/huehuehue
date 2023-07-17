@@ -16,7 +16,7 @@
     },
     "dependencies": {
         "@tauri-apps/api": "^1.4.0",
-        "class-variance-authority": "^0.6.1",
+        "class-variance-authority": "^0.7.0",
         "prettier": "^2.8.8",
         "prettier-plugin-svelte": "^2.10.1",
         "tailwind-merge": "^1.13.2"
