@@ -60,7 +60,7 @@ async fn command(command: &Command) -> Result<bool, HueHueHueError> {
             HueHueHue::with_config(config)
                 .discover()
                 .await
-                .map_err(|e| Into::<HueHueHueBackendError>::into(e))??;
+                .map_err(Into::<HueHueHueBackendError>::into)??;
 
             return Ok(true);
         }
