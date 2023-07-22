@@ -40,7 +40,8 @@ serde_derive = "1.0.164"
 thiserror = "1.0.44"
 specta = "1.0.5"
 tauri-specta = { version = "1.0.2", features = ["javascript", "typescript"] }
-clap = { version = "4.3.19", features = ["derive"] }
+clap = { version = "4.3.11", features = ["derive"] }
+futures = "0.3.28"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
