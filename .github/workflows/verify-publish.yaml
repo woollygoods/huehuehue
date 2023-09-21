@@ -53,7 +53,7 @@ jobs:
         run: cd src-tauri && cargo install cargo-tarpaulin
         continue-on-error: true
       - name: run cargo:tarpaulin (runs cargo test)
-        run: cd src-tauri && cargo tarpaulin --verbose --all-features --out Xml --output-dir ./coverage
+        run: cd src-tauri && cargo tarpaulin --verbose --all-features --out xml --output-dir ./coverage
       - name: Codecov
         uses: codecov/codecov-action@v3
         with:
