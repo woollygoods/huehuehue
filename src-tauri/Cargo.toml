@@ -22,7 +22,7 @@ name = "huehuehue"
 path = "./lib.rs"
 
 [build-dependencies]
-tauri-build = { version = "1.4", features = [] }
+tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
 tauri = { version = "1.5", features = ["shell-open"] }
