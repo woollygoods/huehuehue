@@ -37,7 +37,7 @@ reachable = "0.2.2"
 reqwest = { version = "0.11.22", features = ["json"] }
 paste = "1.0.14"
 serde_derive = "1.0.164"
-thiserror = "1.0.50"
+thiserror = "1.0.51"
 specta = "1.0.5"
 tauri-specta = { version = "1.0.2", features = ["javascript", "typescript"] }
 clap = { version = "4.4.11", features = ["derive"] }
